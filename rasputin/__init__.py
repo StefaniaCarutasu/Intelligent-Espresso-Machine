@@ -79,19 +79,39 @@ def create_app(test_config=None):
 
             cursor.execute("SELECT * from beverages_types WHERE name = ?", (beverage_type,))
             beverage = cursor.fetchone()
+            tableListCoffee = cursor.execute("SELECT coffee_quantity FROM beverages_types").fetchall()
+            coffee_vals = [table[0] for table in tableListCoffee]
+            min_coffee_val = min([elem for elem in coffee_vals])
 
-            if beverage[2] > current_state[1]:
-                error = "Not enough coffee in the machine."
-            if beverage[3] > current_state[2]:
-                error = "Not enough milk in the machine."
+            tableListMilk = cursor.execute("SELECT milk_quantity FROM beverages_types").fetchall()
+            milk_vals = [table[0] for table in tableListMilk]
+            min_milk_val = min([elem for elem in milk_vals])
+
+            if current_state[1] < min_coffee_val:
+                flash(current_state[1])
+                error = "Please, refill the machine with coffee. Is running low."
+            if current_state[2] < min_milk_val:
+                error = "Please, refill the machine with milk. Is running low."
             if syrup and current_state[3] < 10:
-                error = "Not enough syrup in the machine."
-            
+                error = "Please, refill the machine with syrup. Is running low."
+
+            if error is None:
+                if beverage[2] > current_state[1]:
+                    error = "Not enough coffee in the machine."
+                if beverage[3] > current_state[2]:
+                    error = "Not enough milk in the machine."
             if error is None:
                 flash('Rasputin is working on your coffee...', 'success')
+                new_coffee = 0
+                new_milk = 0
+                new_syrup = 0
+                if current_state[1] - beverage[2] > 0:
+                    new_coffee = current_state[1] - beverage[2]
+                if current_state[2] - beverage[3] > 0:
+                    new_milk = current_state[2] - beverage[3]
                 local_db.execute(
                     "UPDATE machine_state SET coffee_quantity = ?, milk_quantity = ?, syrup_quantity = ? WHERE id  = ?",
-                    (current_state[1] - beverage[2], current_state[2] - beverage[3], current_state[3] - (10 if syrup else 0), current_state[0])
+                    (new_coffee, new_milk, current_state[3] - (10 if syrup else 0), current_state[0])
                 )
                 local_db.commit()
             else:
