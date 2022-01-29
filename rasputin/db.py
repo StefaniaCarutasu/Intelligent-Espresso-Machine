@@ -39,20 +39,11 @@ def init_db_command():
 @with_appcontext
 def alter_db_command():
     db = get_db()
-    # db.execute("ALTER TABLE user ADD COLUMN birth_date date")
-    # db.commit()
+    db.execute("ALTER TABLE user_preference ADD COLUMN syrup boolean")
+    db.execute("ALTER TABLE preprogrammed_coffee ADD COLUMN syrup boolean")
+    db.commit()
 
-    # click.echo('Altered the database.')
-
-    cursor = db.cursor()
-    cursor.execute("SELECT * FROM beverages_types")
-    tableList = cursor.fetchall()
-    for table in tableList:
-        click.echo(table[0])
-        click.echo(table[1])
-        click.echo(table[2])
-        click.echo(table[3])
-        click.echo(table[4])
+    click.echo('Altered the database.')
 
 @click.command(name='populate-coffee-table')
 @with_appcontext

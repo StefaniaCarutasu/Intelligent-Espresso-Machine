@@ -80,6 +80,7 @@ def login():
 
     return render_template('auth/login.html', title='Login', form=form)
 
+
 # LOGOUT
 @bp.route('/logout')
 def logout():

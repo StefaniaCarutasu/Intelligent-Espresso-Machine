@@ -29,7 +29,7 @@
                     <!-- Navbar Right Side -->
                     <div class="navbar-nav">
                         {% if g.user %}
-                            <a class="nav-item nav-link" href="{{ url_for('profile.show_user') }}">{{ g.user['username'] }}</a>
+                            <a class="nav-item nav-link" href="{{ url_for('profile.user_profile') }}">{{ g.user['username'] }}</a>
                             <a class="nav-item nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
                         {% else %}
                             <a class="nav-item nav-link" href="{{ url_for('auth.login') }}">Login</a>

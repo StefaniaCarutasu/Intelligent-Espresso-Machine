@@ -29,7 +29,7 @@ CREATE TABLE user_preference (
     user_id INTEGER UNIQUE ,
     beverage_id INTEGER,
     roast_type TEXT NOT NULL,
-    flavour_type TEXT,
+    syrup BOOLEAN,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (beverage_id) REFERENCES beverages_types(id)
 );
@@ -42,7 +42,7 @@ CREATE TABLE preprogrammed_coffee (
     user_id INTEGER,
     beverage_id INTEGER,
     roast_type TEXT NOT NULL,
-    flavour_type TEXT,
+    syrup BOOLEAN,
     start_time TIME NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (beverage_id) REFERENCES beverages_types(id)

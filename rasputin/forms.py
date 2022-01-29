@@ -27,7 +27,6 @@ class ProfileForm(FlaskForm):
     birth_date = DateField('Birth date')
     submit = SubmitField('Edit profile')
 
-
 class CoffeeOptionsForm(FlaskForm):
     beverage_type = SelectField('Beverage type', validators=[DataRequired()])
     roast_type = SelectField('Roast type', choices=[('decaffeinated', 'Decaffeinated'), ('low', 'Low'), ('medium', "Medium"), ('high', "High")], validators=[DataRequired()])

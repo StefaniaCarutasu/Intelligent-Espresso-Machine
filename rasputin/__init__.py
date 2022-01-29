@@ -60,10 +60,10 @@ def create_app(test_config=None):
         local_db = db.get_db()
         cursor = local_db.cursor()
         cursor.execute("SELECT * FROM beverages_types")
-        beverageList = cursor.fetchall()
+        beverage_list = cursor.fetchall()
 
         form = forms.CoffeeOptionsForm()
-        form.beverage_type.choices = [(item[1], item[1]) for item in beverageList]
+        form.beverage_type.choices = [(item[0], item[1]) for item in beverage_list]
         
 
         if request.method == 'POST' and form.validate():
@@ -77,7 +77,7 @@ def create_app(test_config=None):
             roast_type = request.form['roast_type']
             syrup = True if request.form.get('syrup') else False
 
-            cursor.execute("SELECT * from beverages_types WHERE name = ?", (beverage_type,))
+            cursor.execute("SELECT * from beverages_types WHERE id = ?", (beverage_type,))
             beverage = cursor.fetchone()
 
             if beverage[2] > current_state[1]:
