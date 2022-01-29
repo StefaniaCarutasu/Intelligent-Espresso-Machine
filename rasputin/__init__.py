@@ -1,6 +1,9 @@
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, flash
 from . import db, auth
+import geocoder
+import requests
+
 
 def create_app(test_config=None):
     # create and configure the app
@@ -32,6 +35,29 @@ def create_app(test_config=None):
     # default route
     @app.route('/')
     def home():
-     return render_template('home.html', title='Home')
+        API_KEY = 'dce1511217da2da880123e2faa59824a'  # initialize your key here
+        city = geocoder.ip('me').city.lower()  # city name passed as argument
+
+        # call API and convert response into Python dictionary
+        url = f'http://api.openweathermap.org/data/2.5/weather?q={city}&APPID={API_KEY}'
+        response = requests.get(url).json()
+
+        # error like unknown city name, inavalid api key
+        if response.get('cod') != 200:
+            message = response.get('message', '')
+            error = f"Error getting temperature for {city.title()}. Error message = {message}"
+            flash(error)
+            return render_template('home.html', title='Home')
+
+        # get current temperature and convert it into Celsius
+        current_temperature = response.get('main', {}).get('temp')
+        if current_temperature:
+            current_temperature_celsius = round(current_temperature - 273.15, 2)
+            return render_template('home.html', title='Home', temp=current_temperature_celsius)
+            # return f'Current temperature of {city.title()} is {current_temperature_celsius} &#8451;'
+        else:
+            error = f"Error getting temperature for {city.title()}"
+            flash(error)
+            return render_template('home.html', title='Home')
 
     return app
