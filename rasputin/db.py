@@ -35,7 +35,18 @@ def init_db_command():
     init_db()
     click.echo('Initialized the database.')
 
+@click.command(name='alter-db')
+@with_appcontext
+def alter_db_command():
+    db = get_db()
+    db.execute("ALTER TABLE user ADD COLUMN birth_date date")
+    db.commit()
+
+    click.echo('Altered the database.')
+
+
 # register db functions to app
 def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
+    app.cli.add_command(alter_db_command)
