@@ -8,8 +8,10 @@ def get_machine_id():
     db_local = db.get_db()
     cursor = db_local.cursor()
     cursor.execute("SELECT id from machine_state")
-    return cursor.fetchone()
+    return cursor.fetchone()[0]
 
+
+# COFFEE REFILL
 @bp.route('/coffee')
 @login_required
 def refill_coffee():
@@ -24,6 +26,8 @@ def refill_coffee():
 
     return redirect(url_for('home'))
 
+
+# MILK REFILL
 @bp.route('/milk')
 @login_required
 def refill_milk():
@@ -38,6 +42,8 @@ def refill_milk():
 
     return redirect(url_for('home'))
 
+
+# SYRUP REFILL
 @bp.route('/syrup')
 @login_required
 def refill_syrup():
