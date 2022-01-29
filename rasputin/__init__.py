@@ -5,6 +5,10 @@ import geocoder
 import requests
 
 
+from flask import Flask, render_template
+from . import db, auth, suggestion
+
+
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
@@ -31,6 +35,8 @@ def create_app(test_config=None):
 
     # register auth blueprint
     app.register_blueprint(auth.bp)
+
+    app.register_blueprint(suggestion.bp)
 
     # default route
     @app.route('/', methods=('GET', 'POST'))
