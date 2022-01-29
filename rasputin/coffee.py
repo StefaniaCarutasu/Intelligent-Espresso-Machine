@@ -1,3 +1,6 @@
+from rasputin import db
+
+
 class BeverageType:
     def __init__(self, name, coffee_quantity, milk_quantity, milk_froth, roast_type, flavour):
         self.name = name
@@ -9,3 +12,4 @@ class BeverageType:
 
     def changeCaffeineQuantity(self, caffeine_quantity):
         self.coffee_quantity = caffeine_quantity
+

@@ -5,7 +5,8 @@ CREATE TABLE user (
   username TEXT UNIQUE NOT NULL,
   email TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL,
-  remember BOOLEAN
+  remember BOOLEAN,
+  birth_date DATE
 );
 
 
