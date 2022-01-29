@@ -1,6 +1,7 @@
+import string
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, Length, Email, EqualTo
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField
+from wtforms.validators import DataRequired, Length, Email, EqualTo, AnyOf
 import email_validator
 
 class RegistrationForm(FlaskForm):
@@ -15,3 +16,9 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Sign up')
+
+class CoffeeOptionsForm(FlaskForm):
+    beverage_type = SelectField('Beverage type', validators=[DataRequired()])
+    caffeine_level = SelectField('Caffeine level', choices=[('decaffeinated', 'Decaffeinated'), ('low', 'Low'), ('medium', "Medium"), ('high', "High")], validators=[DataRequired()])
+    syrup = BooleanField('Add syrup', default=False, validators=[AnyOf([True, False])])
+    submit = SubmitField('Start')

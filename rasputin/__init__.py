@@ -1,6 +1,6 @@
 import os
-from flask import Flask, render_template, flash
-from . import db, auth
+from flask import Flask, render_template, flash, request
+from . import db, auth, forms
 import geocoder
 import requests
 
@@ -33,7 +33,7 @@ def create_app(test_config=None):
     app.register_blueprint(auth.bp)
 
     # default route
-    @app.route('/')
+    @app.route('/', methods=('GET', 'POST'))
     def home():
         API_KEY = 'dce1511217da2da880123e2faa59824a'  # initialize your key here
         city = geocoder.ip('me').city.lower()  # city name passed as argument
@@ -51,13 +51,42 @@ def create_app(test_config=None):
 
         # get current temperature and convert it into Celsius
         current_temperature = response.get('main', {}).get('temp')
+
+        # make coffee form
+        # getting all beverage types
+        local_db = db.get_db()
+        cursor = local_db.cursor()
+        cursor.execute("SELECT * FROM beverages_types")
+        coffeeList = cursor.fetchall()
+
+        form = forms.CoffeeOptionsForm()
+        form.beverage_type.choices = [(item[1].lower(), item[1]) for item in coffeeList]
+
+        if request.method == 'POST':
+            error = None
+
+            beverage_type = request.form['beverage_type']
+            caffeine_level = request.form['caffeine_level']
+            syrup = True if request.form.get('syrup') else False
+
+            if beverage_type is None:
+                error = 'Inavlid beverage.'
+            if caffeine_level is None:
+                error = 'Invalid caffeine level'
+            
+            if error is None:
+                flash('Rasputin is working on your coffee...', 'success')
+
+            if error:
+                flash(error, 'danger')
+
         if current_temperature:
             current_temperature_celsius = round(current_temperature - 273.15, 2)
-            return render_template('home.html', title='Home', temp=current_temperature_celsius)
+            return render_template('home.html', title='Home', temp=current_temperature_celsius, form=form)
             # return f'Current temperature of {city.title()} is {current_temperature_celsius} &#8451;'
         else:
             error = f"Error getting temperature for {city.title()}"
             flash(error)
-            return render_template('home.html', title='Home')
+            return render_template('home.html', title='Home', form=form)
 
     return app

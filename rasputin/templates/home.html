@@ -25,7 +25,6 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarToggle">
                     <div class="navbar-nav mr-auto">
-                        <a class="nav-item nav-link" href="#">Ceva</a>
                     </div>
                     <!-- Navbar Right Side -->
                     <div class="navbar-nav">
@@ -45,15 +44,63 @@
         <div class="row">
             <div class="col-md-8">
                 {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">
-                    {{ message }}
-                </div>
-                {% endfor %}
-                {% endif %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    {% endif %}
                 {% endwith %}
-                {% block content %}{% endblock %}
+                {% block content %}
+                    {% if g.user %}
+                        <div class="content-section">
+                            <form method="POST" action="">
+                                {{ form.hidden_tag() }}
+                                <fieldset class="form-group">
+                                    <legend class="border-bottom mb-4">Coffee options</legend>
+                                    <div class="form-group">
+                                        {{ form.beverage_type.label(class="form-control-label") }}
+                                        {% if form.beverage_type.errors %}
+                                            {{ form.beverage_type(class="form-control form-control-lg is-invalid") }}
+                                            <div class="invalid-feedback">
+                                                {% for error in form.beverage_type.errors %}
+                                                    <span>{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            {{ form.beverage_type(class="form-control form-control-lg") }}
+                                        {% endif %}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form.caffeine_level.label(class="form-control-label") }}
+                                        {% if form.caffeine_level.errors %}
+                                            {{ form.caffeine_level(class="form-control form-control-lg is-invalid") }}
+                                            <div class="invalid-feedback">
+                                                {% for error in form.caffeine_level.errors %}
+                                                    <span>{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            {{ form.caffeine_level(class="form-control form-control-lg") }}
+                                        {% endif %}
+                                    </div>
+                                    <div class="form-check">
+                                        {{ form.syrup(class="form-check-input") }}
+                                        {{ form.syrup.label(class="form-check-label") }}
+                                    </div>
+                                </fieldset>
+                                <div class="form-group">
+                                    {{ form.submit(class="btn btn-outline-info") }}
+                                </div>
+                            </form>
+                        </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        Please log in to make coffee!
+                    </div>
+                    {% endif %}
+                {% endblock %}
             </div>
             <div class="col-md-4">
                 <div class="content-section">

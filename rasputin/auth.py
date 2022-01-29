@@ -10,6 +10,7 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     form = forms.RegistrationForm()
+
     if request.method == 'POST':
         username = request.form['username']
         email = request.form['email']
@@ -17,8 +18,6 @@ def register():
         confirm_password = request.form['confirm_password']
         db_local = db.get_db()
         error = None
-
-        print(password, confirm_password)
 
         if not email:
             error = 'Email is required.'
@@ -44,7 +43,8 @@ def register():
                 flash(f'Account created for {form.username.data}!', 'success')
                 return redirect(url_for("auth.login"))
 
-        flash(error)
+        if error:
+            flash(error, 'danger')
 
     return render_template('auth/register.html', title='Register', form=form)
 
@@ -53,10 +53,11 @@ def register():
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
     form = forms.LoginForm()
+    
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        # remeber = request.form['remeber me']
+        # remeber = request.form['remeber']
         db_local = db.get_db()
         error = None
         user = db_local.execute(
@@ -74,7 +75,8 @@ def login():
             flash('You have been logged in!', 'success')
             return redirect(url_for('home'))
 
-        flash(error)
+        if error:
+            flash(error, 'danger')
 
     return render_template('auth/login.html', title='Login', form=form)
 
