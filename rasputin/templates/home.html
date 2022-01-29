@@ -95,6 +95,11 @@
                                 </div>
                             </form>
                         </div>
+                        <div class="container-fluid">
+                            <a class="btn btn-outline-info" href="{{ url_for('refill.refill_coffee') }}">Refill coffee</a>
+                            <a class="btn btn-outline-info" href="{{ url_for('refill.refill_milk') }}">Refill milk</a>
+                            <a class="btn btn-outline-info" href="{{ url_for('refill.refill_syrup') }}">Refill syrup</a>
+                        </div>
                     {% else %}
                     <div class="alert alert-info">
                         Please log in to make coffee!

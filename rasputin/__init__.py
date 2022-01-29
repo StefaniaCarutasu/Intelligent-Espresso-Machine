@@ -1,13 +1,8 @@
 import os
-from flask import Flask, current_app, render_template, flash, request
-from . import db, auth, forms
+from flask import Flask, render_template, flash, request
+from . import db, auth, forms, refill, suggestion
 import geocoder
 import requests
-
-
-from flask import Flask, render_template
-from . import db, auth, suggestion
-
 
 def create_app(test_config=None):
     # create and configure the app
@@ -37,6 +32,7 @@ def create_app(test_config=None):
     app.register_blueprint(auth.bp)
 
     app.register_blueprint(suggestion.bp)
+    app.register_blueprint(refill.bp)
 
     # default route
     @app.route('/', methods=('GET', 'POST'))
@@ -73,7 +69,6 @@ def create_app(test_config=None):
             # getting the machine state
             cursor.execute("SELECT * from machine_state")
             current_state = cursor.fetchone()
-            print(current_state[1], current_state[2], current_state[3])
 
             error = None
 
