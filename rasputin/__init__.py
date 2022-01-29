@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, flash, request
+from flask import Flask, current_app, render_template, flash, request
 from . import db, auth, forms
 import geocoder
 import requests
@@ -57,27 +57,42 @@ def create_app(test_config=None):
         local_db = db.get_db()
         cursor = local_db.cursor()
         cursor.execute("SELECT * FROM beverages_types")
-        coffeeList = cursor.fetchall()
+        beverageList = cursor.fetchall()
 
         form = forms.CoffeeOptionsForm()
-        form.beverage_type.choices = [(item[1].lower(), item[1]) for item in coffeeList]
+        form.beverage_type.choices = [(item[1], item[1]) for item in beverageList]
+        
 
         if request.method == 'POST':
+            # getting the machine state
+            cursor.execute("SELECT * from machine_state")
+            current_state = cursor.fetchone()
+            print(current_state[1], current_state[2], current_state[3])
+
             error = None
 
             beverage_type = request.form['beverage_type']
-            caffeine_level = request.form['caffeine_level']
+            roast_type = request.form['roast_type']
             syrup = True if request.form.get('syrup') else False
 
-            if beverage_type is None:
-                error = 'Inavlid beverage.'
-            if caffeine_level is None:
-                error = 'Invalid caffeine level'
+            cursor.execute("SELECT * from beverages_types WHERE name = ?", (beverage_type,))
+            beverage = cursor.fetchone()
+
+            if beverage[2] > current_state[1]:
+                error = "Not enough coffee in the machine."
+            if beverage[3] > current_state[2]:
+                error = "Not enough milk in the machine."
+            if syrup and current_state[3] < 10:
+                error = "Not enough syrup in the machine."
             
             if error is None:
                 flash('Rasputin is working on your coffee...', 'success')
-
-            if error:
+                local_db.execute(
+                    "UPDATE machine_state SET coffee_quantity = ?, milk_quantity = ?, syrup_quantity = ? WHERE id  = ?",
+                    (current_state[1] - beverage[2], current_state[2] - beverage[3], current_state[3] - (10 if syrup else 0), current_state[0])
+                )
+                local_db.commit()
+            else:
                 flash(error, 'danger')
 
         if current_temperature:

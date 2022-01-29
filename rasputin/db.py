@@ -89,9 +89,20 @@ def populateCoffeeTable():
     db_local.commit()
     click.echo("Coffee table modified")
 
+@click.command(name='add-state')
+@with_appcontext
+def add_state_command():
+    db_local = get_db()
+    db_local.execute(
+        "INSERT INTO machine_state (coffee_quantity, milk_quantity, syrup_quantity, broken) VALUES (?, ?, ?, ?)",
+        (1000, 1000, 100, False),
+    )
+    db_local.commit()
+
 # register db functions to app
 def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
     app.cli.add_command(alter_db_command)
     app.cli.add_command(populateCoffeeTable)
+    app.cli.add_command(add_state_command)

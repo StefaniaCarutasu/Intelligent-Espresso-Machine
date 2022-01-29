@@ -73,16 +73,16 @@
                                         {% endif %}
                                     </div>
                                     <div class="form-group">
-                                        {{ form.caffeine_level.label(class="form-control-label") }}
-                                        {% if form.caffeine_level.errors %}
-                                            {{ form.caffeine_level(class="form-control form-control-lg is-invalid") }}
+                                        {{ form.roast_type.label(class="form-control-label") }}
+                                        {% if form.roast_type.errors %}
+                                            {{ form.roast_type(class="form-control form-control-lg is-invalid") }}
                                             <div class="invalid-feedback">
-                                                {% for error in form.caffeine_level.errors %}
+                                                {% for error in form.roast_type.errors %}
                                                     <span>{{ error }}</span>
                                                 {% endfor %}
                                             </div>
                                         {% else %}
-                                            {{ form.caffeine_level(class="form-control form-control-lg") }}
+                                            {{ form.roast_type(class="form-control form-control-lg") }}
                                         {% endif %}
                                     </div>
                                     <div class="form-check">

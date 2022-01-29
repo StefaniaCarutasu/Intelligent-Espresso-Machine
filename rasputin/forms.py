@@ -19,6 +19,6 @@ class LoginForm(FlaskForm):
 
 class CoffeeOptionsForm(FlaskForm):
     beverage_type = SelectField('Beverage type', validators=[DataRequired()])
-    caffeine_level = SelectField('Caffeine level', choices=[('decaffeinated', 'Decaffeinated'), ('low', 'Low'), ('medium', "Medium"), ('high', "High")], validators=[DataRequired()])
+    roast_type = SelectField('Roast type', choices=[('decaffeinated', 'Decaffeinated'), ('low', 'Low'), ('medium', "Medium"), ('high', "High")], validators=[DataRequired()])
     syrup = BooleanField('Add syrup', default=False, validators=[AnyOf([True, False])])
     submit = SubmitField('Start')
