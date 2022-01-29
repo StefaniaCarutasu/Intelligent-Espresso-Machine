@@ -1,7 +1,7 @@
-import string
+from re import sub
 from flask_wtf import FlaskForm
 
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, DateField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, AnyOf
 
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField
@@ -21,6 +21,11 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Sign up')
+
+class ProfileForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
+    birth_date = DateField('Birth date')
+    submit = SubmitField('Edit profile')
 
 
 class CoffeeOptionsForm(FlaskForm):

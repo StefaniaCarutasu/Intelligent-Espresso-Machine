@@ -11,7 +11,7 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 def register():
     form = forms.RegistrationForm()
 
-    if request.method == 'POST':
+    if request.method == 'POST' and form.validate():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
@@ -43,8 +43,7 @@ def register():
                 flash(f'Account created for {form.username.data}!', 'success')
                 return redirect(url_for("auth.login"))
 
-        if error:
-            flash(error, 'danger')
+        flash(error, 'danger')
 
     return render_template('auth/register.html', title='Register', form=form)
 
@@ -54,12 +53,14 @@ def register():
 def login():
     form = forms.LoginForm()
     
-    if request.method == 'POST':
+    if request.method == 'POST' and form.validate():
+        error = None
+
         username = request.form['username']
         password = request.form['password']
         # remeber = request.form['remeber']
         db_local = db.get_db()
-        error = None
+
         user = db_local.execute(
             'SELECT * FROM user WHERE username = ?', (username,)
         ).fetchone()
@@ -75,8 +76,7 @@ def login():
             flash('You have been logged in!', 'success')
             return redirect(url_for('home'))
 
-        if error:
-            flash(error, 'danger')
+        flash(error, 'danger')
 
     return render_template('auth/login.html', title='Login', form=form)
 

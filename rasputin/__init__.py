@@ -1,6 +1,6 @@
 import os
 from flask import Flask, render_template, flash, request
-from . import db, auth, forms, refill, suggestion
+from . import db, auth, forms, refill, suggestion, profile
 import geocoder
 import requests
 
@@ -33,6 +33,7 @@ def create_app(test_config=None):
 
     app.register_blueprint(suggestion.bp)
     app.register_blueprint(refill.bp)
+    app.register_blueprint(profile.bp)
 
     # default route
     @app.route('/', methods=('GET', 'POST'))
@@ -65,7 +66,7 @@ def create_app(test_config=None):
         form.beverage_type.choices = [(item[1], item[1]) for item in beverageList]
         
 
-        if request.method == 'POST':
+        if request.method == 'POST' and form.validate():
             # getting the machine state
             cursor.execute("SELECT * from machine_state")
             current_state = cursor.fetchone()
