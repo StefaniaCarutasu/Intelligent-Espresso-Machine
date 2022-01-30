@@ -36,5 +36,35 @@
             {{ form.submit(class="btn btn-outline-info") }}
         </div>
     </form>
+    <br />
+    <div>
+        <h4>Preference</h4>
+        <div class='message'>
+            <p>beverage: {{ preference['name'] }}</p>
+            <p>roast type: {{ preference['roast_type'] }}</p>
+            <p>syrup: {% if preference['syrup'] %} Da {% else %} Nu {% endif %}</p>
+        </div>
+    </div>
+    <br />
+    <div>
+        <h4>{% block title %} Programmed coffees {% endblock %}</h4>
+        {% for coffee in programmed_coffees %}
+        <div class='container-fluid'>
+            <h6>{{ coffee['name'] }}</h6>
+            <p>roast type: {{ coffee['roast_type'] }}</p>
+            <p>syrup: {% if preference['syrup'] %} Da {% else %} Nu {% endif %}</p>
+            <p>time: {{ coffee['start_time'] }}</p>
+            <form method="post" action="{{ url_for('profile.delete_program') }}">
+                <input type="hidden" value="{{ coffee['id'] }}" name="program_to_delete">
+                <button class="btn btn-outline-info" type="submit">Delete</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
 </div>
+<div class="container-fluid">
+    <a class="btn btn-outline-info" href="{{ url_for('profile.preference') }}">Change preference</a>
+    <a class="btn btn-outline-info" href="{{ url_for('profile.program') }}">Add programmmed coffee</a>
+</div>
+<br />
 {% endblock %}

@@ -1,7 +1,7 @@
 from re import sub
 from flask_wtf import FlaskForm
 
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, DateField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, DateField, TimeField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, AnyOf
 
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField
@@ -29,9 +29,16 @@ class ProfileForm(FlaskForm):
 
 class CoffeeOptionsForm(FlaskForm):
     beverage_type = SelectField('Beverage type', validators=[DataRequired()])
-    roast_type = SelectField('Roast type', choices=[('decaffeinated', 'Decaffeinated'), ('low', 'Low'), ('medium', "Medium"), ('high', "High")], validators=[DataRequired()])
+    roast_type = SelectField('Roast type', choices=[('Decaffeinated', 'Decaffeinated'), ('Low', 'Low'), ('Medium', "Medium"), ('High', "High")], validators=[DataRequired()])
     syrup = BooleanField('Add syrup', default=False, validators=[AnyOf([True, False])])
     submit = SubmitField('Start')
+
+class PreferenceForm(CoffeeOptionsForm):
+    submit = SubmitField('Set preference')
+
+class ProgrammedCoffeeForm(CoffeeOptionsForm):
+    time = TimeField('Time', validators=[DataRequired()])
+    submit = SubmitField('Add')
 
 class BloodPressureForm(FlaskForm):
     systolic = IntegerField('Systolic', validators=[DataRequired()])

@@ -79,23 +79,22 @@ def populateCoffeeTable():
     )
     db_local.commit()
     click.echo("Coffee table modified")
+    
 @click.command(name='select-min-milk-val')
 @with_appcontext
 def get_min_milk_val():
     db_local = get_db()
-    cursor = db_local.cursor()
-    tableList = cursor.execute("SELECT milk_quantity FROM beverages_types").fetchall()
-    milk_vals = [table[0] for table in tableList]
-    min_val = min([elem for elem in milk_vals])
+    tableList = db_local.execute("SELECT milk_quantity FROM beverages_types").fetchall()
+    min_val = min([elem for elem in tableList])
+    return  min_val
 
 @click.command(name='select-min-coffee-val')
 @with_appcontext
 def get_min_coffee_val():
     db_local = get_db()
-    cursor = db_local.cursor()
-    tableList = cursor.execute("SELECT coffee_quantity FROM beverages_types").fetchall()
-    coffee_vals = [table[0] for table in tableList]
-    min_val = min([elem for elem in coffee_vals])
+    tableList = db_local.execute("SELECT coffee_quantity FROM beverages_types").fetchall()
+    min_val = min([elem for elem in tableList])
+    return min_val
 
 @click.command(name='add-state')
 @with_appcontext
@@ -111,16 +110,15 @@ def add_state_command():
 @with_appcontext
 def get_syrup_val():
     db_local = get_db()
-    cursor = db_local.cursor()
-    min_val = cursor.execute("SELECT syrup_quantity FROM machine_state").fetchone()
-@click.command(name='populate-machine-state')
+    return db_local.execute("SELECT syrup_quantity FROM machine_state").fetchall()
+
+@click.command(name='populate-machine_state')
 @with_appcontext
 def populate_machine_state():
     db_local = get_db()
-    db_local.execute("DELETE from machine_state")
     db_local.execute(
-        "INSERT INTO machine_state (coffee_quantity, milk_quantity, syrup_quantity, broken) VALUES (?, ?, ?, ?)",
-        (200, 30, 10, False)
+        "INSERT INTO machine_state (coffee_quantity, milk_quantity, syrup_quantity, broken) VALUES (?, ?, ?, ?, ?)",
+        (50, 50, 10, False)
     )
     db_local.commit()
     click.echo("Machine state modified")
@@ -132,6 +130,3 @@ def init_app(app):
     app.cli.add_command(alter_db_command)
     app.cli.add_command(populateCoffeeTable)
     app.cli.add_command(add_state_command)
-    app.cli.add_command(populate_machine_state)
-    app.cli.add_command(get_min_coffee_val)
-    app.cli.add_command(get_min_milk_val)
