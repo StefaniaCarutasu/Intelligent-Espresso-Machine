@@ -101,17 +101,18 @@ def create_app(test_config=None):
                 flash(error, 'danger')
 
 
-        # USER PREFERERENCE
-        cursor.execute("SELECT id FROM user_preference WHERE user_id = ?", (g.user[0],))
-        preference = True if cursor.fetchone() else False
+        preference = False
+        if g.user:
+            # USER PREFERERENCE
+            cursor.execute("SELECT id FROM user_preference WHERE user_id = ?", (g.user[0],))
+            preference = True if cursor.fetchone() else False
 
+            # PROGRAMMED COFFEES
+            current_time = datetime.now().strftime("%H:%M")
+            cursor.execute("SELECT id FROM preprogrammed_coffee WHERE user_id = ? AND start_time = ?", (g.user[0], current_time))
 
-        # PROGRAMMED COFFEES
-        current_time = datetime.now().strftime("%H:%M")
-        cursor.execute("SELECT id FROM preprogrammed_coffee WHERE user_id = ? AND start_time = ?", (g.user[0], current_time))
-
-        if cursor.fetchone():
-            flash('Rasputin is working on programmed coffee...', 'success')
+            if cursor.fetchone():
+                flash('Rasputin is working on programmed coffee...', 'success')
 
 
         if current_temperature:

@@ -1,5 +1,5 @@
 import functools
-from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
+from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for, jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
 from . import db, forms
 
@@ -21,14 +21,19 @@ def register():
 
         if not email:
             error = 'Email is required.'
+            return jsonify({'status': 'Email is required.'}), 403
         elif not username:
             error = 'Username is required.'
+            return jsonify({'status': 'Username is required.'}), 403
         elif not password:
             error = 'Password is required.'
+            return jsonify({'status': 'Password is required.'}), 403
         elif not confirm_password:
             error = 'Confirmation password is required.'
+            return jsonify({'status': 'Confirmation password is required.'}), 403
         elif password != confirm_password:
             error = "Password and confirmation password don't match."
+            return jsonify({'status': "Password and confirmation password don't match."}), 403
 
         if error is None:
             try:
