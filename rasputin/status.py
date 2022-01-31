@@ -7,12 +7,12 @@ def get_status():
     ).fetchone()
 
     beverage = db.get_db().execute(
-        'SELECT id, name, coffee_type'
+        'SELECT id, name, coffee_type, coffee_quantity'
         ' FROM beverages_types'
     ).fetchone()
 
     saved_coffee = db.get_db().execute(
-        'SELECT id, user_id, beverage_id'
+        'SELECT id, user_id, beverage_id, roast_type'
         ' FROM preprogrammed_coffee'
     ).fetchone()
 
@@ -27,7 +27,7 @@ def get_status():
 
     return {
         'data': {
-            'user': user['value'],
+            'user': user['username'],
             'beverage': {
                 'name': beverage['name'],
                 'coffee_quantity': beverage['coffee_quantity']

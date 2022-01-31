@@ -80,25 +80,31 @@ def populateCoffeeTable():
     db_local.commit()
     click.echo("Coffee table modified")
     
-@click.command(name='select-min-milk-val')
-@with_appcontext
 def get_min_milk_val():
     db_local = get_db()
-    tableList = db_local.execute("SELECT milk_quantity FROM beverages_types").fetchall()
-    min_val = min([elem for elem in tableList])
-    return  min_val
-
-@click.command(name='select-min-coffee-val')
-@with_appcontext
-def get_min_coffee_val():
-    db_local = get_db()
-    tableList = db_local.execute("SELECT coffee_quantity FROM beverages_types").fetchall()
-    min_val = min([elem for elem in tableList])
+    cursor = db_local.cursor()
+    tableList = cursor.execute("SELECT milk_quantity FROM beverages_types").fetchall()
+    milk_vals = [table[0] for table in tableList]
+    min_val = min([elem for elem in milk_vals])
     return min_val
 
-@click.command(name='add-state')
+def get_min_coffee_val():
+    db_local = get_db()
+    cursor = db_local.cursor()
+    tableList = cursor.execute("SELECT coffee_quantity FROM beverages_types").fetchall()
+    coffee_vals = [table[0] for table in tableList]
+    min_val = min([elem for elem in coffee_vals])
+    return min_val
+
+def get_syrup_val():
+    db_local = get_db()
+    cursor = db_local.cursor()
+    min_val = cursor.execute("SELECT syrup_quantity FROM machine_state").fetchone()
+    return min_val
+
+@click.command(name='populate-machine-state')
 @with_appcontext
-def add_state_command():
+def populate_machine_state():
     db_local = get_db()
     db_local.execute(
         "INSERT INTO machine_state (coffee_quantity, milk_quantity, syrup_quantity, broken) VALUES (?, ?, ?, ?)",
@@ -106,22 +112,52 @@ def add_state_command():
     )
     db_local.commit()
 
-@click.command(name='select-syrup-val')
+@click.command(name='change-machine-state')
 @with_appcontext
-def get_syrup_val():
+def change_machine_state():
     db_local = get_db()
-    return db_local.execute("SELECT syrup_quantity FROM machine_state").fetchall()
+    cursor = db_local.cursor()
+    
+    cursor.execute("SELECT * from machine_state")
+    machine_id = cursor.fetchone()['id']
 
-@click.command(name='populate-machine_state')
-@with_appcontext
-def populate_machine_state():
-    db_local = get_db()
     db_local.execute(
-        "INSERT INTO machine_state (coffee_quantity, milk_quantity, syrup_quantity, broken) VALUES (?, ?, ?, ?, ?)",
-        (50, 50, 10, False)
+        "UPDATE machine_state SET coffee_quantity = ?, milk_quantity = ?, syrup_quantity = ? WHERE id = ?",
+        (49, 49, 9, machine_id)
     )
     db_local.commit()
     click.echo("Machine state modified")
+
+@click.command(name='broken-machine')
+@with_appcontext
+def add_broken_state():
+    db_local = get_db()
+    cursor = db_local.cursor()
+    
+    cursor.execute("SELECT * from machine_state")
+    machine_id = cursor.fetchone()['id']
+
+    db_local.execute(
+        "UPDATE machine_state SET broken = True WHERE id = ?",
+        (machine_id,),
+    )
+    db_local.commit()
+
+@click.command(name='fix-machine')
+@with_appcontext
+def add_fixed_state():
+    db_local = get_db()
+    cursor = db_local.cursor()
+    
+    cursor.execute("SELECT * from machine_state")
+    machine_id = cursor.fetchone()['id']
+
+    db_local.execute(
+        "UPDATE machine_state SET broken = False WHERE id = ?",
+        (machine_id,),
+    )
+    db_local.commit()
+
 
 # register db functions to app
 def init_app(app):
@@ -129,4 +165,7 @@ def init_app(app):
     app.cli.add_command(init_db_command)
     app.cli.add_command(alter_db_command)
     app.cli.add_command(populateCoffeeTable)
-    app.cli.add_command(add_state_command)
+    app.cli.add_command(populate_machine_state)
+    app.cli.add_command(change_machine_state)
+    app.cli.add_command(add_broken_state)
+    app.cli.add_command(add_fixed_state)

@@ -12,7 +12,6 @@ from datetime import datetime
 import json
 import time
 import eventlet
-import status
 
 eventlet.monkey_patch()
 
@@ -80,22 +79,35 @@ def create_app(test_config=None):
         current_temperature = response.get('main', {}).get('temp')
 
 
-        # MAKE COFFEE FORM
-        # getting all beverage types
         local_db = db.get_db()
         cursor = local_db.cursor()
+
+
+        # VERIFY MACHINE STATE
+        # getting the machine state
+        cursor.execute("SELECT * from machine_state")
+        current_state = cursor.fetchone()
+
+        if current_state['broken']:
+            flash('Rasputin has a technical problem. Please check.', 'danger')
+        if current_state['coffee_quantity'] < db.get_min_coffee_val():
+            flash('Please, refill the machine with coffee. Is running low.', 'danger')
+        if current_state['milk_quantity'] < db.get_min_milk_val():
+            flash('Please, refill the machine with milk. Is running low.', 'danger')
+        if current_state['syrup_quantity'] < 10:
+            flash('Please, refill the machine with syrup. Is running low.', 'danger')
+
+
+        # MAKE COFFEE FORM
+        # getting all beverage types
         cursor.execute("SELECT * FROM beverages_types")
         beverage_list = cursor.fetchall()
 
         form = forms.CoffeeOptionsForm()
-        form.beverage_type.choices = [(item[0], item[1]) for item in beverage_list]
+        form.beverage_type.choices = [(item['id'], item['name']) for item in beverage_list]
         
 
         if request.method == 'POST' and form.validate():
-            # getting the machine state
-            cursor.execute("SELECT * from machine_state")
-            current_state = cursor.fetchone()
-
             error = None
 
             beverage_type = request.form['beverage_type']
@@ -105,11 +117,11 @@ def create_app(test_config=None):
             cursor.execute("SELECT * from beverages_types WHERE id = ?", (beverage_type,))
             beverage = cursor.fetchone()
 
-            if beverage[2] > current_state[1]:
+            if beverage['coffee_quantity'] > current_state['coffee_quantity']:
                 error = "Not enough coffee in the machine."
-            if beverage[3] > current_state[2]:
+            if beverage['milk_quantity'] > current_state['milk_quantity']:
                 error = "Not enough milk in the machine."
-            if syrup and current_state[3] < 10:
+            if syrup and current_state['syrup_quantity'] < 10:
                 error = "Not enough syrup in the machine."
             
             if error is None:
