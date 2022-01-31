@@ -1,13 +1,16 @@
 import os
 from threading import Thread
 
-from flask import Flask, g, render_template, flash, request
+from flask import Flask, request, g, render_template
 from flask_mqtt import Mqtt
 from flask_socketio import SocketIO
 
-from . import db, auth, forms, refill, suggestion, profile, status, status_api
-import geocoder
-import requests
+from . import db, auth
+from . import forms
+from . import refill
+from . import  suggestion
+from . import profile
+
 from datetime import datetime
 import json
 import time
@@ -51,7 +54,6 @@ def create_app(test_config=None):
     app.register_blueprint(suggestion.bp)
     app.register_blueprint(refill.bp)
     app.register_blueprint(profile.bp)
-    app.register_blueprint(status_api.bp)
 
     # default route
     @app.route('/', methods=('GET', 'POST'))
@@ -62,23 +64,6 @@ def create_app(test_config=None):
             thread = Thread(target=background_thread)
             thread.daemon = True
             thread.start()
-        API_KEY = 'dce1511217da2da880123e2faa59824a'  # initialize your key here
-        city = geocoder.ip('me').city.lower()  # city name passed as argument
-
-        # call API and convert response into Python dictionary
-        url = f'http://api.openweathermap.org/data/2.5/weather?q={city}&APPID={API_KEY}'
-        response = requests.get(url).json()
-
-        # error like unknown city name, inavalid api key
-        if response.get('cod') != 200:
-            message = response.get('message', '')
-            error = f"Error getting temperature for {city.title()}. Error message = {message}"
-            flash(error)
-            return render_template('home.html', title='Home')
-
-        # get current temperature and convert it into Celsius
-        current_temperature = response.get('main', {}).get('temp')
-
 
         local_db = db.get_db()
         cursor = local_db.cursor()
@@ -149,13 +134,14 @@ def create_app(test_config=None):
             if cursor.fetchone():
                 flash('Rasputin is working on programmed coffee...', 'success')
 
-
+        current_temperature = suggestion.get_temperature()[1]
         if current_temperature:
             current_temperature_celsius = round(current_temperature - 273.15, 2)
-            return render_template('home.html', title='Home', temp=current_temperature_celsius, form=form, preference=preference)
+            return render_template('home.html', title='Home', temp=current_temperature_celsius, form=form,
+                                   preference=preference)
             # return f'Current temperature of {city.title()} is {current_temperature_celsius} &#8451;'
         else:
-            error = f"Error getting temperature for {city.title()}"
+            error = f"Error getting temperature for {suggestion.get_temperature()[0].title()}"
             flash(error)
             return render_template('home.html', title='Home', form=form, preference=preference)
 

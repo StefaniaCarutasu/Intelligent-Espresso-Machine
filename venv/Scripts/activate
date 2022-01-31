@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="D:\An III\Intelligent-Espresso-Machine\venv"
+VIRTUAL_ENV="C:\Facultate\Anul 2\SO\Intelligent-Espresso-Machine\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

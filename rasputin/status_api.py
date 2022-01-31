@@ -3,7 +3,6 @@ from flask import (
 )
 
 from auth import login_required
-from db import get_db
 import status as bed_status
 
 bp = Blueprint('status_api', __name__, url_prefix='/status')

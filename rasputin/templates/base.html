@@ -25,7 +25,16 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarToggle">
                     <div class="navbar-nav mr-auto">
-                        <a class="nav-item nav-link" href="{{ url_for('suggestion.search_suggestions') }}">Suggestions</a>
+                        <div class="dropdown">
+                            <button class="dropbtn">Suggestions
+                              <i class="fa fa-caret-down"></i>
+                            </button>
+                            <div class="dropdown-content">
+                              <a class="nav-item nav-link" href="{{ url_for('suggestion.search_suggestions_bloodPressure') }}">Blood Pressure</a>
+                              <a class="nav-item nav-link" href="{{ url_for('suggestion.search_suggestions_temperature') }}">Temperature</a>
+                            </div>
+                          </div>
+
                     </div>
                     <!-- Navbar Right Side -->
                     <div class="navbar-nav">

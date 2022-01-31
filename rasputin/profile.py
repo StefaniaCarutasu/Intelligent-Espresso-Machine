@@ -1,5 +1,5 @@
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for
-from matplotlib.pyplot import title
+
 
 from rasputin.auth import login_required
 from . import db, forms

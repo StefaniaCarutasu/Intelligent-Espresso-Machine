@@ -1,4 +1,4 @@
-#!"D:\An III\Intelligent-Espresso-Machine\venv\Scripts\python.exe"
+#!"C:\Facultate\Anul 2\SO\Intelligent-Espresso-Machine\venv\Scripts\python.exe"
 # EASY-INSTALL-ENTRY-SCRIPT: 'future==0.18.2','console_scripts','futurize'
 import re
 import sys
