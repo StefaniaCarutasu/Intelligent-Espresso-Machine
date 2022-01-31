@@ -93,7 +93,7 @@ def create_app(test_config=None):
         form.beverage_type.choices = [(item['id'], item['name']) for item in beverage_list]
         
 
-        if request.method == 'POST' and form.validate():
+        if request.method == 'POST':
             error = None
 
             beverage_type = request.form['beverage_type']

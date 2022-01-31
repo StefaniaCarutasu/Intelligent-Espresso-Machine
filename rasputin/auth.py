@@ -11,7 +11,7 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 def register():
     form = forms.RegistrationForm()
 
-    if request.method == 'POST' and form.validate():
+    if request.method == 'POST':
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
@@ -52,10 +52,10 @@ def register():
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
     form = forms.LoginForm()
+    context = {'status': None}
+    error = "Nu intra"
     
-    if request.method == 'POST' and form.validate():
-        error = None
-
+    if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         # remeber = request.form['remeber']
@@ -78,7 +78,8 @@ def login():
 
         flash(error, 'danger')
 
-    return render_template('auth/login.html', title='Login', form=form)
+    context['status'] = error
+    return render_template('auth/login.html', title='Login', form=form, **context)
 
 
 # LOGOUT

@@ -26,7 +26,7 @@ def user_profile():
     form.username.data = g.user[1]
     form.birth_date.data = g.user[5]
 
-    if request.method == 'POST' and form.validate():
+    if request.method == 'POST':
         error = None
 
         username = request.form['username']
@@ -63,7 +63,7 @@ def preference():
     form = forms.PreferenceForm()
     form.beverage_type.choices = [(item[0], item[1]) for item in beverage_list]
 
-    if request.method == 'POST' and form.validate():
+    if request.method == 'POST':
         beverage_type = request.form['beverage_type']
         roast_type = request.form['roast_type']
         syrup = True if request.form.get('syrup') else False
@@ -99,7 +99,7 @@ def program():
     form = forms.ProgrammedCoffeeForm()
     form.beverage_type.choices = [(item[0], item[1]) for item in beverage_list]
 
-    if request.method == 'POST' and form.validate():
+    if request.method == 'POST':
         beverage_type = request.form['beverage_type']
         roast_type = request.form['roast_type']
         syrup = True if request.form.get('syrup') else False

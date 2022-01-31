@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, url_for
+from flask import Blueprint, flash, redirect, url_for
 from rasputin.auth import login_required
 from . import db
 
@@ -24,6 +24,8 @@ def refill_coffee():
     )
     db_local.commit()
 
+    flash('Refilled coffee.', 'success')
+
     return redirect(url_for('home'))
 
 
@@ -40,6 +42,8 @@ def refill_milk():
     )
     db_local.commit()
 
+    flash('Refilled milk.', 'success')
+
     return redirect(url_for('home'))
 
 
@@ -55,6 +59,8 @@ def refill_syrup():
         (100, id)
     )
     db_local.commit()
+
+    flash('Refilled syrup.', 'success')
 
     return redirect(url_for('home'))
 
