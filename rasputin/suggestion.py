@@ -15,8 +15,10 @@ def get_temperature():
     if response.get('cod') != 200:
         message = response.get('message', '')
         error = f"Error getting temperature for {city.title()}. Error message = {message}"
-        flash(error)
-        return render_template('home.html', title='Home')
+        flash(error, 'danger')
+
+        context = {'status': error}
+        return render_template('home.html', title='Home', **context)
 
     # get current temperature and convert it into Celsius
     current_temperature = response.get('main', {}).get('temp')
@@ -26,11 +28,6 @@ def get_temperature():
 bp = Blueprint('suggestion', __name__, url_prefix='/suggestion')
 
 def see_suggestions_bloodPressure(systolic, diastolic):
-    error = None
-
-    #if not systolic or not diastolic:
-     #   return jsonify({'status': 'Blood pressure is required.'}), 403
-
     db_local = db.get_db()
 
     maxCoffeeLevel = 100;
@@ -49,11 +46,6 @@ def see_suggestions_bloodPressure(systolic, diastolic):
     return tableList
 
 def see_suggestions_temperature(current_temperature):
-    error = None
-
-    #if not systolic or not diastolic:
-     #   return jsonify({'status': 'Blood pressure is required.'}), 403
-
     db_local = db.get_db()
 
     type = 'Hot'
@@ -72,22 +64,25 @@ def search_suggestions_bloodPressure():
     form = forms.BloodPressureForm()
     systolic = 120
     diastolic = 80
+
+    context = {'status': None}
+    error = None
+
     if request.method == 'POST':
         systolic = int(request.form['systolic'])
         diastolic = int(request.form['diastolic'])
 
-
         if systolic is None or diastolic is None:
             error = 'Introduce your blood pressure.'
 
-
     coffeeTypes = see_suggestions_bloodPressure(int(systolic), int(diastolic))
     message = "You might want to try decaf coffee."
-    return render_template('suggestions/bloodPressure.html', title='Login', form=form, coffeeTypes = coffeeTypes, message = message)
+
+    context['status'] = error
+    return render_template('suggestions/bloodPressure.html', title='Login', form=form, coffeeTypes = coffeeTypes, message = message, **context)
 
 @bp.route('/temperature', methods=('GET', 'POST'))
 def search_suggestions_temperature():
-
     current_temperature = get_temperature()[1]
     current_temperature_celsius = round(current_temperature - 273.15, 2)
 

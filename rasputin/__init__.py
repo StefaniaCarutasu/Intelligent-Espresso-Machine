@@ -69,6 +69,8 @@ def create_app(test_config=None):
         local_db = db.get_db()
         cursor = local_db.cursor()
 
+        context = {'status': None, 'machine-status': None}
+        error = None
 
         # VERIFY MACHINE STATE
         # getting the machine state
@@ -76,14 +78,17 @@ def create_app(test_config=None):
         current_state = cursor.fetchone()
 
         if current_state['broken']:
-            flash('Rasputin has a technical problem. Please check.', 'danger')
+            error = 'Rasputin has a technical problem. Please check.'
         if current_state['coffee_quantity'] < db.get_min_coffee_val():
-            flash('Please, refill the machine with coffee. Is running low.', 'danger')
+            error ='Please, refill the machine with coffee. Is running low.'
         if current_state['milk_quantity'] < db.get_min_milk_val():
-            flash('Please, refill the machine with milk. Is running low.', 'danger')
+            error = 'Please, refill the machine with milk. Is running low.'
         if current_state['syrup_quantity'] < 10:
-            flash('Please, refill the machine with syrup. Is running low.', 'danger')
+            error = 'Please, refill the machine with syrup. Is running low.'
 
+        if error:
+            flash(error, 'danger')
+            context['machine-status'] = error
 
         # MAKE COFFEE FORM
         # getting all beverage types
@@ -93,33 +98,41 @@ def create_app(test_config=None):
         form = forms.CoffeeOptionsForm()
         form.beverage_type.choices = [(item['id'], item['name']) for item in beverage_list]
         
-
         if request.method == 'POST':
-            error = None
 
             beverage_type = request.form['beverage_type']
             roast_type = request.form['roast_type']
             syrup = True if request.form.get('syrup') else False
 
-            cursor.execute("SELECT * from beverages_types WHERE id = ?", (beverage_type,))
-            beverage = cursor.fetchone()
+            if beverage_type is None:
+                error = 'Beverage type is required.'
+            if roast_type is None:
+                error = 'Roast type is required.'
 
-            if beverage['coffee_quantity'] > current_state['coffee_quantity']:
-                error = "Not enough coffee in the machine."
-            if beverage['milk_quantity'] > current_state['milk_quantity']:
-                error = "Not enough milk in the machine."
-            if syrup and current_state['syrup_quantity'] < 10:
-                error = "Not enough syrup in the machine."
-            
             if error is None:
-                flash('Rasputin is working on your coffee...', 'success')
-                local_db.execute(
-                    "UPDATE machine_state SET coffee_quantity = ?, milk_quantity = ?, syrup_quantity = ? WHERE id  = ?",
-                    (current_state[1] - beverage[2], current_state[2] - beverage[3], current_state[3] - (10 if syrup else 0), current_state[0])
-                )
-                local_db.commit()
+                cursor.execute("SELECT * from beverages_types WHERE id = ?", (beverage_type,))
+                beverage = cursor.fetchone()
+
+                if beverage['coffee_quantity'] > current_state['coffee_quantity']:
+                    error = "Not enough coffee in the machine."
+                if beverage['milk_quantity'] > current_state['milk_quantity']:
+                    error = "Not enough milk in the machine."
+                if syrup and current_state['syrup_quantity'] < 10:
+                    error = "Not enough syrup in the machine."
+            
+                if error is None:
+                    flash('Rasputin is working on your coffee...', 'success')
+                    local_db.execute(
+                        "UPDATE machine_state SET coffee_quantity = ?, milk_quantity = ?, syrup_quantity = ? WHERE id  = ?",
+                        (current_state[1] - beverage[2], current_state[2] - beverage[3], current_state[3] - (10 if syrup else 0), current_state[0])
+                    )
+                    local_db.commit()
+                else:
+                    flash(error, 'danger')
+                    context['status'] = error
             else:
                 flash(error, 'danger')
+                context['status'] = error
 
 
         preference = False
@@ -138,13 +151,13 @@ def create_app(test_config=None):
         current_temperature = suggestion.get_temperature()[1]
         if current_temperature:
             current_temperature_celsius = round(current_temperature - 273.15, 2)
+
             return render_template('home.html', title='Home', temp=current_temperature_celsius, form=form,
-                                   preference=preference)
-            # return f'Current temperature of {city.title()} is {current_temperature_celsius} &#8451;'
+                                   preference=preference, **context)
         else:
             error = f"Error getting temperature for {suggestion.get_temperature()[0].title()}"
             flash(error)
-            return render_template('home.html', title='Home', form=form, preference=preference)
+            return render_template('home.html', title='Home', form=form, preference=preference, **context)
 
     @app.route('/status')
     def get_status_api():

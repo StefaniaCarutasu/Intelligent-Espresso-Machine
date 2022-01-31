@@ -18,15 +18,18 @@ def refill_coffee():
     db_local = db.get_db()
     id = get_machine_id()
 
-    db_local.execute(
-        "UPDATE machine_state SET coffee_quantity = ? WHERE id = ?",
-        (1000, id)
-    )
-    db_local.commit()
+    try:
+        db_local.execute(
+            "UPDATE machine_state SET coffee_quantity = ? WHERE id = ?",
+            (1000, id)
+        )
+        db_local.commit()
 
-    flash('Refilled coffee.', 'success')
-
-    return redirect(url_for('home'))
+        flash('Rasputin is now full on coffee.', 'success')
+    except db_local.DatabaseError:
+        flash('Error while updating database.', 'danger')
+    finally:
+        return redirect(url_for('home'))
 
 
 # MILK REFILL
@@ -36,15 +39,18 @@ def refill_milk():
     db_local = db.get_db()
     id = get_machine_id()
 
-    db_local.execute(
-        "UPDATE machine_state SET milk_quantity = ? WHERE id = ?",
-        (1000, id)
-    )
-    db_local.commit()
+    try:
+        db_local.execute(
+            "UPDATE machine_state SET milk_quantity = ? WHERE id = ?",
+            (1000, id)
+        )
+        db_local.commit()
 
-    flash('Refilled milk.', 'success')
-
-    return redirect(url_for('home'))
+        flash('Rasputin is now full on milk.', 'success')
+    except db_local.DatabaseError:
+        flash('Error while updating database.', 'danger')
+    finally:
+        return redirect(url_for('home'))
 
 
 # SYRUP REFILL
@@ -54,13 +60,16 @@ def refill_syrup():
     db_local = db.get_db()
     id = get_machine_id()
 
-    db_local.execute(
-        "UPDATE machine_state SET syrup_quantity = ? WHERE id = ?",
-        (100, id)
-    )
-    db_local.commit()
+    try:
+        db_local.execute(
+            "UPDATE machine_state SET syrup_quantity = ? WHERE id = ?",
+            (100, id)
+        )
+        db_local.commit()
 
-    flash('Refilled syrup.', 'success')
-
-    return redirect(url_for('home'))
+        flash('Rasputin is now full on syrup.', 'success')
+    except db_local.DatabaseError:
+        flash('Error while updating database.', 'danger')
+    finally:
+        return redirect(url_for('home'))
 
