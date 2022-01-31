@@ -5,7 +5,7 @@ from flask import Flask, g, render_template, flash, request
 from flask_mqtt import Mqtt
 from flask_socketio import SocketIO
 
-from . import db, auth, forms, refill, suggestion, profile, status
+from . import db, auth, forms, refill, suggestion, profile, status, status_api
 import geocoder
 import requests
 from datetime import datetime
@@ -51,6 +51,7 @@ def create_app(test_config=None):
     app.register_blueprint(suggestion.bp)
     app.register_blueprint(refill.bp)
     app.register_blueprint(profile.bp)
+    app.register_blueprint(status_api.bp)
 
     # default route
     @app.route('/', methods=('GET', 'POST'))
