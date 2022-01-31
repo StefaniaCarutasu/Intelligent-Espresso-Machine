@@ -5,7 +5,7 @@ username = 'claudia_maria_7'
 password = 'test1234'
 
 
-class MyViewTestCase(TestCase):
+class RasputinTestCase(TestCase):
     def create_app(self):
         return create_app({'TESTING': True})
 
@@ -23,7 +23,7 @@ class MyViewTestCase(TestCase):
     def test_login(self):
         # get
         res = self.client.get('/auth/login')
-        html = res.data.decode()
+        html = res.data.decode()    #html-ul intors
 
         assert res.status_code == 200
         assert 'Log In' in html

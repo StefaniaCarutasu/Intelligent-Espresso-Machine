@@ -10,6 +10,8 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     form = forms.RegistrationForm()
+    context = {'status': None}
+    error = None
 
     if request.method == 'POST':
         username = request.form['username']
@@ -17,7 +19,6 @@ def register():
         password = request.form['password']
         confirm_password = request.form['confirm_password']
         db_local = db.get_db()
-        error = None
 
         if not email:
             error = 'Email is required.'
@@ -45,7 +46,8 @@ def register():
 
         flash(error, 'danger')
 
-    return render_template('auth/register.html', title='Register', form=form)
+    context['status'] = error
+    return render_template('auth/register.html', title='Register', form=form, **context)
 
 
 # LOGIN
@@ -53,7 +55,7 @@ def register():
 def login():
     form = forms.LoginForm()
     context = {'status': None}
-    error = "Nu intra"
+    error = None
     
     if request.method == 'POST':
         username = request.form['username']
