@@ -10,6 +10,7 @@ from . import forms
 from . import refill
 from . import suggestion
 from . import profile
+from . import status
 
 from datetime import datetime
 import json
@@ -25,7 +26,7 @@ mqtt=None
 
 def create_app(test_config=None):
     # create and configure the app
-    global app
+    # global app
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
@@ -158,9 +159,13 @@ def create_app(test_config=None):
             flash(error)
             return render_template('home.html', title='Home', form=form, preference=preference, **context)
 
+    @app.route('/status')
+    def get_status_api():
+        return status.get_status()
+
     return app
 
-def create_mqtt_app():
+def create_mqtt_app(app):
 
     # Setup connection to mqtt broker
     app.config['MQTT_BROKER_URL'] = 'localhost'  # use the free broker from HIVEMQ
@@ -172,10 +177,10 @@ def create_mqtt_app():
 
     global mqtt
     mqtt = Mqtt(app)
-    global socketio
+    # global socketio
     socketio = SocketIO(app, async_mode="eventlet")
 
-    return mqtt
+    return mqtt, socketio
 
 
 def background_thread():
