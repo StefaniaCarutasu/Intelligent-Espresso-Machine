@@ -26,7 +26,7 @@ mqtt=None
 
 def create_app(test_config=None):
     # create and configure the app
-    # global app
+    global app
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
@@ -164,7 +164,7 @@ def create_mqtt_app(app):
 
     global mqtt
     mqtt = Mqtt(app)
-    # global socketio
+    global socketio
     socketio = SocketIO(app, async_mode="eventlet")
 
     return mqtt, socketio
