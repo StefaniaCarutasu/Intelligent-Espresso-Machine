@@ -1,14 +1,14 @@
 import os
 from threading import Thread
 
-from flask import Flask, request, g, render_template
+from flask import Flask, request, g, render_template, flash
 from flask_mqtt import Mqtt
 from flask_socketio import SocketIO
 
 from . import db, auth
 from . import forms
 from . import refill
-from . import  suggestion
+from . import suggestion
 from . import profile
 
 from datetime import datetime
