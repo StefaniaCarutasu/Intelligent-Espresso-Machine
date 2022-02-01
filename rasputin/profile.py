@@ -1,4 +1,3 @@
-from tkinter.messagebox import NO
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for, current_app, jsonify
 
 from rasputin.auth import login_required
@@ -206,7 +205,7 @@ def preference_api():
 
     if error is None:
         if preference is not None:
-            # deleting previsious preferance\
+            # deleting previsious preferance
             try:
                 db_local.execute(
                     "DELETE FROM user_preference WHERE id = ?",
@@ -386,4 +385,44 @@ def delete_program_api():
     finally:
         return jsonify({
             'status': 'Item deleted successfully'
+        }), 200
+
+@bp.route('/make-favorite', methods=('GET',))
+@login_required
+def make_favorite():
+    db_local = db.get_db()
+    cursor = db_local.cursor()
+
+    cursor.execute(
+        "SELECT b.name, p.roast_type, p.syrup FROM user_preference p INNER JOIN beverages_types b ON p.beverage_id = b.id WHERE user_id = ?",
+        (g.user[0],))
+    preference = cursor.fetchone()
+
+    flash('Rasputin is working on favorite coffee...', 'success')
+    with current_app.app_context():
+        current_app.config['STATUS_API'] = 'Rasputin is working on favorite coffee...'
+
+    return redirect(url_for('home'))
+
+@bp.route('/api/make-favorite', methods=('GET',))
+@login_required
+def make_favorite_api():
+    db_local = db.get_db()
+    cursor = db_local.cursor()
+
+    cursor.execute(
+        "SELECT b.name, p.roast_type, p.syrup FROM user_preference p INNER JOIN beverages_types b ON p.beverage_id = b.id WHERE user_id = ?",
+        (g.user[0],))
+    preference = cursor.fetchone()
+    
+    with current_app.app_context():
+        current_app.config['STATUS_API'] = 'Rasputin is working on favorite coffee...'
+
+    return jsonify({
+            'status': 'Rasputin is working on favorite coffee...',
+            'data': {
+                'name': preference['name'],
+                'roast_type': preference['roast_type'],
+                'syrup': preference['syrup']
+            }
         }), 200
