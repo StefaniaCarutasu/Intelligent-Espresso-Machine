@@ -30,21 +30,21 @@
         "operationId": "register",
         "description": "Register new users",
         "tags": [
-            "auth"
+          "auth"
         ],
-        "requestBody":{
+        "requestBody": {
           "description": "",
           "required": true,
           "content": {
-            "application/json":{
-              "schema":{
+            "application/json": {
+              "schema": {
                 "$ref": "#/components/schemas/RegistrationRequestData"
               }
             }
           }
         },
         "responses": {
-          "200":{
+          "200": {
             "$ref": "#/components/responses/SuccessfulRegister"
           },
           "403": {
@@ -71,16 +71,15 @@
         }
       }
     },
-
-    "/profile/api/user-profile":{
-      "post":{
+    "/profile/api/user-profile": {
+      "post": {
         "summary": "Update the user's profile",
         "operationId": "user_profile_api",
         "description": "Update the user's profile",
-        "tags":[
+        "tags": [
           "functions"
         ],
-        "responses":{
+        "responses": {
           "200": {
             "description": "Successfully updated the profile",
             "content": {
@@ -91,7 +90,6 @@
               }
             }
           },
-
           "403": {
             "description": "Update failed",
             "content": {
@@ -105,16 +103,15 @@
         }
       }
     },
-
-    "/profile/api/preference":{
-      "post":{
+    "/profile/api/preference": {
+      "post": {
         "summary": "Update preference list",
         "operationId": "preference_api",
         "description": "Update preference list",
-        "tags":[
+        "tags": [
           "functions"
         ],
-        "responses":{
+        "responses": {
           "200": {
             "description": "Successfully updated the preference list",
             "content": {
@@ -138,16 +135,15 @@
         }
       }
     },
-
-    "/profile/api/program":{
-      "post":{
+    "/profile/api/program": {
+      "post": {
         "summary": "Program coffee making",
         "operationId": "program_api",
         "description": "Program coffee making",
-        "tags":[
+        "tags": [
           "functions"
         ],
-        "responses":{
+        "responses": {
           "200": {
             "description": "Programmed coffee has been successfully saved",
             "content": {
@@ -171,16 +167,15 @@
         }
       }
     },
-
-    "/profile/api/delete-programmed-coffee":{
-      "post":{
+    "/profile/api/delete-programmed-coffee": {
+      "post": {
         "summary": "Delete the programmed coffee",
         "operationId": "delete_program_api",
         "description": "Delete the programmed coffee",
-        "tags":[
+        "tags": [
           "functions"
         ],
-        "responses":{
+        "responses": {
           "200": {
             "description": "Successfully deleted the programmed coffee",
             "content": {
@@ -204,16 +199,15 @@
         }
       }
     },
-
-    "/refill/api/coffee":{
-      "get":{
+    "/refill/api/coffee": {
+      "get": {
         "summary": "Refill the coffee",
         "operationId": "refill_coffee_api",
         "description": "Refill the coffee",
-        "tags":[
+        "tags": [
           "functions"
         ],
-        "responses":{
+        "responses": {
           "200": {
             "description": "Successfully refilled the coffee",
             "content": {
@@ -234,20 +228,18 @@
               }
             }
           }
-
         }
       }
     },
-
-    "/refill/api/milk":{
-      "get":{
+    "/refill/api/milk": {
+      "get": {
         "summary": "Refill the milk",
         "operationId": "refill_milk_api",
         "description": "Refill the milk",
-        "tags":[
+        "tags": [
           "functions"
         ],
-        "responses":{
+        "responses": {
           "200": {
             "description": "Successfully refilled the milk",
             "content": {
@@ -268,20 +260,18 @@
               }
             }
           }
-
         }
       }
     },
-
-    "/refill/api/syrup":{
-      "get":{
+    "/refill/api/syrup": {
+      "get": {
         "summary": "Refill the syrup",
         "operationId": "refill_syrup_api",
         "description": "Refill the syrup",
-        "tags":[
+        "tags": [
           "functions"
         ],
-        "responses":{
+        "responses": {
           "200": {
             "description": "Successfully refilled the syrup",
             "content": {
@@ -302,20 +292,18 @@
               }
             }
           }
-
         }
       }
     },
-
-    "/suggestion/api/temperature":{
-      "get":{
+    "/suggestion/api/temperature": {
+      "get": {
         "summary": "Make recommendation depending on the current temperature",
         "operationId": "search_suggestions_temperature_api",
         "description": "Make recommendation depending on the current temperature",
-        "tags":[
+        "tags": [
           "functions"
         ],
-        "responses":{
+        "responses": {
           "200": {
             "description": "Successfully searched for suggestions",
             "content": {
@@ -329,16 +317,15 @@
         }
       }
     },
-
-    "/suggestion/api/bloodPressure":{
-      "get":{
+    "/suggestion/api/bloodPressure": {
+      "get": {
         "summary": "Make recommendation depending on the user's blood pressure",
         "operationId": "search_suggestions_bloodPressure_api",
         "description": "Make recommendation depending on the user's blood pressure",
-        "tags":[
+        "tags": [
           "functions"
         ],
-        "responses":{
+        "responses": {
           "200": {
             "description": "Successfully searched for suggestions",
             "content": {
@@ -349,7 +336,6 @@
               }
             }
           },
-
           "403": {
             "description": "Could not send the form",
             "content": {
@@ -366,152 +352,152 @@
   },
   "components": {
     "schemas": {
-      "StatusResponse":{
+      "StatusResponse": {
         "type": "object",
-        "properties":{
-          "status":{
+        "properties": {
+          "status": {
             "type": "string"
           }
         }
       },
-      "RegistrationRequestData":{
+      "RegistrationRequestData": {
         "type": "object",
-        "properties":{
+        "properties": {
           "username": {
             "type": "string"
           },
-          "password":{
-            "type":"string"
+          "password": {
+            "type": "string"
           }
         }
       },
-      "HeadrestResponse":{
+      "HeadrestResponse": {
         "type": "object",
-        "properties":{
+        "properties": {
           "status": {
             "type": "string"
           },
-          "data":{
-            "type":"object",
-            "properties":{
-              "id":{
-                "type":"integer"
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
               },
-              "timestamp":{
-                "type":"string"
+              "timestamp": {
+                "type": "string"
               },
-              "value":{
-                "type":"string"
+              "value": {
+                "type": "string"
               }
             }
           }
         }
       },
-      "EditResponse":{
+      "EditResponse": {
         "type": "object",
-        "properties":{
+        "properties": {
           "status": {
             "type": "string"
           },
-          "data":{
-            "type":"object",
-            "properties":{
-              "username":{
-                "type":"string"
+          "data": {
+            "type": "object",
+            "properties": {
+              "username": {
+                "type": "string"
               },
-              "birth_date":{
-                "type":"string"
+              "birth_date": {
+                "type": "string"
               }
             }
           }
         }
       },
-      "EditFailResponse":{
+      "EditFailResponse": {
         "type": "object",
-        "properties":{
+        "properties": {
           "status": {
             "type": "string"
           },
-          "data":{
-            "type":"object",
-            "properties":{
-              "username":{
-                "type":"string"
+          "data": {
+            "type": "object",
+            "properties": {
+              "username": {
+                "type": "string"
               },
-              "birth_date":{
-                "type":"string"
+              "birth_date": {
+                "type": "string"
               }
             }
           }
         }
       },
-      "ProgramResponse":{
+      "ProgramResponse": {
         "type": "object",
-        "properties":{
+        "properties": {
           "status": {
             "type": "string"
           },
-          "data":{
-            "type":"object",
-            "properties":{
-              "username":{
-                "type":"string"
+          "data": {
+            "type": "object",
+            "properties": {
+              "username": {
+                "type": "string"
               },
-              "beverage_type":{
-                "type":"string"
+              "beverage_type": {
+                "type": "string"
               },
-              "roast_type":{
-                "type":"string"
+              "roast_type": {
+                "type": "string"
               },
-              "time":{
-                "type":"string"
+              "time": {
+                "type": "string"
               }
             }
           }
         }
       },
-      "ProgramFailResponse":{
+      "ProgramFailResponse": {
         "type": "object",
-        "properties":{
+        "properties": {
           "status": {
             "type": "string"
           },
-          "data":{
-            "type":"object",
-            "properties":{
-              "username":{
-                "type":"string"
+          "data": {
+            "type": "object",
+            "properties": {
+              "username": {
+                "type": "string"
               },
-              "beverage_type":{
-                "type":"string"
+              "beverage_type": {
+                "type": "string"
               },
-              "roast_type":{
-                "type":"string"
+              "roast_type": {
+                "type": "string"
               },
-              "time":{
-                "type":"string"
+              "time": {
+                "type": "string"
               }
             }
           }
         }
       },
-      "DeleteCoffeeResponse":{
+      "DeleteCoffeeResponse": {
         "type": "object",
-        "properties":{
+        "properties": {
           "status": {
             "type": "string"
           }
         }
       },
-      "FailedDeleteCoffeeResponse":{
+      "FailedDeleteCoffeeResponse": {
         "type": "object",
-        "properties":{
+        "properties": {
           "status": {
             "type": "string"
           }
         }
       },
-      "RefillResponse":{
+      "RefillResponse": {
         "type": "object",
         "properties": {
           "status": {
@@ -533,7 +519,7 @@
           }
         }
       },
-      "SuggestionsResponse":{
+      "SuggestionsResponse": {
         "type": "object",
         "properties": {
           "status": {
@@ -541,21 +527,23 @@
           },
           "data": {
             "type": "array",
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "coffee_quantity": {
-                "type": "integer"
-              },
-              "milk_quantity": {
-                "type": "integer"
+            "items": {
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "coffee_quantity": {
+                  "type": "integer"
+                },
+                "milk_quantity": {
+                  "type": "integer"
+                }
               }
             }
           }
         }
       },
-      "FailedSuggestionsResponse":{
+      "FailedSuggestionsResponse": {
         "type": "object",
         "properties": {
           "status": {
@@ -565,8 +553,8 @@
       }
     },
     "responses": {
-      "SuccessfullRegister": {
-        "description":"New user has successfully registered",
+      "SuccessfulRegister": {
+        "description": "New user has successfully registered",
         "content": {
           "application/json": {
             "schema": {
@@ -576,7 +564,7 @@
         }
       },
       "FailedRegistration": {
-        "description":"Authentication failed",
+        "description": "Authentication failed",
         "content": {
           "application/json": {
             "schema": {
@@ -585,8 +573,8 @@
           }
         }
       },
-      "SuccessfullLogin": {
-        "description":"New user has successfully logged in",
+      "SuccessfulLogin": {
+        "description": "New user has successfully logged in",
         "content": {
           "application/json": {
             "schema": {
@@ -596,7 +584,7 @@
         }
       },
       "FailedLogin": {
-        "description":"Login failed",
+        "description": "Login failed",
         "content": {
           "application/json": {
             "schema": {
