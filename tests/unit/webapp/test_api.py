@@ -117,7 +117,8 @@ class RasputinApiTestCase(TestCase):
 
         assert res.status_code == 403
         assert json_res['status'] == "Favourite coffee doesn't exist."
-"""
+        """
+
         self.coffee_preference(beverage_type, roast_type, syrup)
 
         res = self.make_favorite()
@@ -179,14 +180,16 @@ class RasputinApiTestCase(TestCase):
 
     def test_logout(self):
         res = self.logout()
+        json_res = json.loads(res.data.decode())
 
         assert res.status_code == 200
+        assert json_res['status'] == 'Logged out successfully!'
 
     def test_refill_coffee(self):
         self.login(username_login, username_login)
 
         res = self.client.get('/refill/api/coffee', follow_redirects=True)
-        # json_res = json.loads(res.data.decode())
+        json_res = json.loads(res.data.decode())
 
         assert res.status_code == 200
 
