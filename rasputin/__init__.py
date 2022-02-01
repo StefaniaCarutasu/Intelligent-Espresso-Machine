@@ -65,7 +65,6 @@ def create_app(test_config=None):
             thread = Thread(target=background_thread)
             thread.daemon = True
             thread.start()
-
         local_db = db.get_db()
         cursor = local_db.cursor()
 
@@ -165,7 +164,7 @@ def create_app(test_config=None):
 
     return app
 
-def create_mqtt_app(app):
+def create_mqtt_app():
 
     # Setup connection to mqtt broker
     app.config['MQTT_BROKER_URL'] = 'localhost'  # use the free broker from HIVEMQ
@@ -180,7 +179,7 @@ def create_mqtt_app(app):
     global socketio
     socketio = SocketIO(app, async_mode="eventlet")
 
-    return mqtt, socketio
+    return mqtt
 
 
 def background_thread():
@@ -193,3 +192,8 @@ def background_thread():
             message = json.dumps(status.get_status(), default=str)
         # Publish
         mqtt.publish('python/mqtt', message)
+
+def run_socketio_app():
+    create_app()
+    create_mqtt_app()
+    socketio.run(app, host='localhost', port=5000, use_reloader=False, debug=True)

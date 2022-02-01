@@ -1,6 +1,7 @@
-from flask import Blueprint, flash, redirect, url_for
+from flask import Blueprint, flash, redirect, url_for, jsonify
 from rasputin.auth import login_required
 from . import db
+from .db import get_db
 
 bp = Blueprint('refill', __name__, url_prefix='/refill')
 
@@ -31,6 +32,41 @@ def refill_coffee():
     finally:
         return redirect(url_for('home'))
 
+@bp.route('/api/coffee')
+@login_required
+def refill_coffee_api():
+    db_local = db.get_db()
+    id = get_machine_id()
+    status = None
+    code = 0
+
+    try:
+        db_local.execute(
+            "UPDATE machine_state SET coffee_quantity = ? WHERE id = ?",
+            (1000, id)
+        )
+        db_local.commit()
+        status = 'Rasputin is now full on coffee.'
+        code = 200
+        flash(status, 'success')
+    except db_local.DatabaseError:
+        status = 'Error while updating database.'
+        code = 403
+        flash(status, 'danger')
+    finally:
+        check = get_db().execute(
+            "SELECT coffee_quantity, milk_quantity, syrup_quantity FROM machine_state WHERE id = ?",
+            (id,)
+        ).fetchone()
+        return jsonify({
+            'status': status,
+            'data': {
+                'coffee_quantity': check['coffee_quantity'],
+                'milk_quantity': check['milk_quantity'],
+                'syrup_quantity': check['syrup_quantity']
+            }
+        }), code
+
 
 # MILK REFILL
 @bp.route('/milk')
@@ -52,6 +88,40 @@ def refill_milk():
     finally:
         return redirect(url_for('home'))
 
+@bp.route('/api/milk')
+@login_required
+def refill_milk_api():
+    db_local = db.get_db()
+    id = get_machine_id()
+    status = None
+    code = 0
+
+    try:
+        db_local.execute(
+            "UPDATE machine_state SET milk_quantity = ? WHERE id = ?",
+            (1000, id)
+        )
+        db_local.commit()
+        status = 'Rasputin is now full on milk.'
+        code = 200
+        flash(status, 'success')
+    except db_local.DatabaseError:
+        status = 'Error while updating database.'
+        code = 403
+        flash(status, 'danger')
+    finally:
+        check = get_db().execute(
+            "SELECT coffee_quantity, milk_quantity, syrup_quantity FROM machine_state WHERE id = ?",
+            (id,)
+        ).fetchone()
+        return jsonify({
+            'status': status,
+            'data': {
+                'coffee_quantity': check['coffee_quantity'],
+                'milk_quantity': check['milk_quantity'],
+                'syrup_quantity': check['syrup_quantity']
+            }
+        }), code
 
 # SYRUP REFILL
 @bp.route('/syrup')
@@ -73,3 +143,37 @@ def refill_syrup():
     finally:
         return redirect(url_for('home'))
 
+@bp.route('/api/syrup')
+@login_required
+def refill_syrup_api():
+    db_local = db.get_db()
+    id = get_machine_id()
+    status = None
+    code = 0
+
+    try:
+        db_local.execute(
+            "UPDATE machine_state SET syrup_quantity = ? WHERE id = ?",
+            (100, id)
+        )
+        db_local.commit()
+        status = 'Rasputin is now full on syrup.'
+        code = 200
+        flash(status, 'success')
+    except db_local.DatabaseError:
+        status = 'Error while updating database.'
+        code = 403
+        flash(status, 'danger')
+    finally:
+        check = get_db().execute(
+            "SELECT coffee_quantity, milk_quantity, syrup_quantity FROM machine_state WHERE id = ?",
+            (id,)
+        ).fetchone()
+        return jsonify({
+            'status': status,
+            'data': {
+                'coffee_quantity': check['coffee_quantity'],
+                'milk_quantity': check['milk_quantity'],
+                'syrup_quantity': check['syrup_quantity']
+            }
+        }), code
