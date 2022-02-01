@@ -68,6 +68,7 @@ In other words, Rasputin combines the basic requirments of a coffee machine with
 * [Mqtt](https://mqtt.org/)
 * [Werkzeug](https://werkzeug.palletsprojects.com/en/2.0.x/)
 * [WTForms](https://wtforms.readthedocs.io/en/3.0.x/)
+* [Mosquitto](https://mosquitto.org/)
 * [Bootstrap](https://getbootstrap.com)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -77,32 +78,76 @@ In other words, Rasputin combines the basic requirments of a coffee machine with
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
-### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+You need to have python 3 and pip 3 already installed on your machine.
 
 ### Installation
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/github_username/repo_name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+1. cd into this project  
+
+2. Install venv if not already installed:  
+`pip install virtualenv`
+  
+3. Create an environment:  
+macOS/Linux: 
+`python3 -m venv ./`
+  
+Windows: 
+`python -m venv venv`  
+
+4. Activate environment  
+
+macOS/Linux:  
+`source venv/bin/activate`  
+
+Windows:  
+`venv\Scripts\activate`
+
+5. Install libraries
+`pip install -r requirements.txt`
+
+6. Set name value for rasputin:
+macOS/Linux: 
+`export FLASK_APP=rasputin`
+
+CMD:
+`set FLASK_APP=rasputin`
+
+PowerShell:
+`$env:FLASK_APP = "rasputin"`
+
+7. Set environment value for development:
+macOS/Linux: 
+`export FLASK_ENV=development`
+
+CMD:
+`set FLASK_ENV=development`
+
+PowerShell:
+`$env:FLASK_ENV = "development"`
+
+
+8. Initialize (or reinitialize) database:  
+`flask init-db`
+
+9. Populate database:
+`flask populate-coffee-table`
+`flask populate-machine-state`
+
+10. Run  
+Http:
+`flask run` or `python -m flask run`
+
+Mqtt:
+CMD PROMPT 1:
+`cd mosquitto`
+`mosquitto -v`
+
+CMD PROMPT 2:
+`python main.py`
+
+CMD PROMP 3:
+`cd rasputin`
+`python mqtt-comms-sub.py`
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -136,8 +181,13 @@ See the [open issues](https://github.com/github_username/repo_name/issues) for a
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
+Project Link: [https://github.com/StefaniaCarutasu/Intelligent-Espresso-Machine](https://github.com/StefaniaCarutasu/Intelligent-Espresso-Machine)
 
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
+On this project worked:
+- Agha Mara
+- Carutasu Stefania
+- Costrun Larisa
+- Dudau Claudia
+- Nicolescu Madalina
 
 <p align="right">(<a href="#top">back to top</a>)</p>
