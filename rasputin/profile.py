@@ -17,11 +17,15 @@ def user_profile():
     cursor = db_local.cursor()
 
     # preference
-    cursor.execute("SELECT b.name, p.roast_type, p.syrup FROM user_preference p INNER JOIN beverages_types b ON p.beverage_id = b.id WHERE user_id = ?", (g.user[0],))
+    cursor.execute(
+        "SELECT b.name, p.roast_type, p.syrup FROM user_preference p INNER JOIN beverages_types b ON p.beverage_id = b.id WHERE user_id = ?",
+        (g.user[0],))
     preference = cursor.fetchone()
 
     # programmed coffees
-    cursor.execute("SELECT b.name, p.id, p.roast_type, p.syrup, p.start_time FROM preprogrammed_coffee p INNER JOIN beverages_types b ON p.beverage_id = b.id WHERE user_id = ?", (g.user[0],))
+    cursor.execute(
+        "SELECT b.name, p.id, p.roast_type, p.syrup, p.start_time FROM preprogrammed_coffee p INNER JOIN beverages_types b ON p.beverage_id = b.id WHERE user_id = ?",
+        (g.user[0],))
     programmed_coffees = cursor.fetchall()
 
     form = forms.ProfileForm()
@@ -35,9 +39,9 @@ def user_profile():
         username = request.form['username']
         birth_date = request.form['birth_date']
 
-        if username is None:
+        if not username:
             error = 'Username required.'
-        
+
         if error is None:
             try:
                 db_local.execute(
@@ -57,7 +61,8 @@ def user_profile():
     context['status'] = error
     with current_app.app_context():
         current_app.config['STATUS_API'] = error
-    return render_template('profile/profile.html', title='Profile', form=form, preference=preference, programmed_coffees=programmed_coffees, **context)
+    return render_template('profile/profile.html', title='Profile', form=form, preference=preference,
+                           programmed_coffees=programmed_coffees, **context)
 
 
 @bp.route('/api/user-profile', methods=['POST'])
@@ -83,7 +88,7 @@ def user_profile_api():
     username = request.form['username']
     birth_date = request.form['birth_date']
 
-    if username is None:
+    if not username:
         error = 'Username required.'
 
     if error is None:
@@ -135,40 +140,42 @@ def preference():
         roast_type = request.form['roast_type']
         syrup = True if request.form.get('syrup') else False
 
-        if beverage_type is None:
+        if not beverage_type:
             error = 'Beverage type is required.'
-        if roast_type is None:
+        if not roast_type:
             error = 'Roast type is required.'
         with current_app.app_context():
             current_app.config['STATUS_API'] = error
-        if preference is not None:
-            # deleting previous preference
+
+        if error is None:
+            if preference is not None:
+                # deleting previous preference
+                try:
+                    db_local.execute(
+                        "DELETE FROM user_preference WHERE id = ?",
+                        (preference[0],)
+                    )
+                    with current_app.app_context():
+                        current_app.config['STATUS_API'] = 'Preference list updated successfully!'
+                except db_local.DatabaseError:
+                    error = 'Error while deleting from database.'
+                    with current_app.app_context():
+                        current_app.config['STATUS_API'] = error
+
             try:
                 db_local.execute(
-                    "DELETE FROM user_preference WHERE id = ?", 
-                    (preference[0],)
+                    "INSERT INTO user_preference (user_id, beverage_id, roast_type, syrup) VALUES (?, ?, ?, ?)",
+                    (g.user[0], beverage_type, roast_type, syrup)
                 )
+                db_local.commit()
                 with current_app.app_context():
                     current_app.config['STATUS_API'] = 'Preference list updated successfully!'
+                return redirect(url_for('profile.user_profile'))
             except db_local.DatabaseError:
-                error = 'Error while deleting from database.'
+                error = 'Error while inserting into database.'
                 with current_app.app_context():
                     current_app.config['STATUS_API'] = error
 
-        try:
-            db_local.execute(
-                "INSERT INTO user_preference (user_id, beverage_id, roast_type, syrup) VALUES (?, ?, ?, ?)",
-                (g.user[0], beverage_type, roast_type, syrup)
-            )
-            db_local.commit()
-            with current_app.app_context():
-                current_app.config['STATUS_API'] = 'Preference list updated successfully!'
-            return redirect(url_for('profile.user_profile'))
-        except db_local.DatabaseError:
-            error = 'Error while inserting into database.'
-            with current_app.app_context():
-                current_app.config['STATUS_API'] = error
-    
     context['status'] = error
     with current_app.app_context():
         current_app.config['STATUS_API'] = error
@@ -192,37 +199,38 @@ def preference_api():
     roast_type = request.form['roast_type']
     syrup = True if request.form.get('syrup') else False
 
-    if beverage_type is None:
+    if not beverage_type:
         error = 'Beverage type is required.'
-    if roast_type is None:
+    if not roast_type:
         error = 'Roast type is required.'
 
-    if preference is not None:
-        # deleting previsious preferance\
+    if error is None:
+        if preference is not None:
+            # deleting previsious preferance\
+            try:
+                db_local.execute(
+                    "DELETE FROM user_preference WHERE id = ?",
+                    (preference[0],)
+                )
+            except db_local.DatabaseError:
+                error = 'Error while deleting from database.'
+
         try:
             db_local.execute(
-                "DELETE FROM user_preference WHERE id = ?",
-                (preference[0],)
+                "INSERT INTO user_preference (user_id, beverage_id, roast_type, syrup) VALUES (?, ?, ?, ?)",
+                (g.user[0], beverage_type, roast_type, syrup)
             )
+            db_local.commit()
+            return jsonify({
+                'status': 'Preference list updated successfully!',
+                'data': {
+                    'username': g.user[1],
+                    'beverage_type': beverage_type,
+                    'roast_type': roast_type
+                }
+            }), 403
         except db_local.DatabaseError:
-            error = 'Error while deleting from database.'
-
-    try:
-        db_local.execute(
-            "INSERT INTO user_preference (user_id, beverage_id, roast_type, syrup) VALUES (?, ?, ?, ?)",
-            (g.user[0], beverage_type, roast_type, syrup)
-        )
-        db_local.commit()
-        return jsonify({
-            'status': 'Preference list updated successfully!',
-            'data': {
-                'username': g.user[1],
-                'beverage_type': beverage_type,
-                'roast_type': roast_type
-            }
-        }), 403
-    except db_local.DatabaseError:
-        error = 'Error while inserting into database.'
+            error = 'Error while inserting into database.'
 
     return jsonify({
         'status': error,
@@ -255,32 +263,35 @@ def program():
         syrup = True if request.form.get('syrup') else False
         time = request.form['time']
 
-        if beverage_type is None:
+        if not beverage_type:
             error = 'Beverage type is required.'
-        if roast_type is None:
+        if not roast_type:
             error = 'Roast type is required.'
-        if time is None:
+        if not time:
             error = 'Time is required.'
         with current_app.app_context():
             current_app.config['STATUS_API'] = error
-        try:
-            db_local.execute(
-                "INSERT INTO preprogrammed_coffee (user_id, beverage_id, roast_type, syrup, start_time) VALUES (?, ?, ?, ?, ?)",
-                (g.user[0], beverage_type, roast_type, syrup, time)
-            )
-            db_local.commit()
-            with current_app.app_context():
-                current_app.config['STATUS_API'] = 'Preprogrammed coffee has been successfully saved!'
-            return redirect(url_for('profile.user_profile'))
-        except db_local.DatabaseError:
-            error = 'Error while inserting into database.'
-            with current_app.app_context():
-                current_app.config['STATUS_API'] = error
+
+        if error is None:
+            try:
+                db_local.execute(
+                    "INSERT INTO preprogrammed_coffee (user_id, beverage_id, roast_type, syrup, start_time) VALUES (?, ?, ?, ?, ?)",
+                    (g.user[0], beverage_type, roast_type, syrup, time)
+                )
+                db_local.commit()
+                with current_app.app_context():
+                    current_app.config['STATUS_API'] = 'Preprogrammed coffee has been successfully saved!'
+                return redirect(url_for('profile.user_profile'))
+            except db_local.DatabaseError:
+                error = 'Error while inserting into database.'
+                with current_app.app_context():
+                    current_app.config['STATUS_API'] = error
 
     context['status'] = error
     with current_app.app_context():
         current_app.config['STATUS_API'] = error
     return render_template('profile/programmed-coffee-form.html', title='Programmed coffee form', form=form, **context)
+
 
 @bp.route('/api/program', methods=['POST'])
 @login_required
@@ -297,30 +308,31 @@ def program_api():
     syrup = True if request.form.get('syrup') else False
     time = request.form['time']
 
-    if beverage_type is None:
+    if not beverage_type:
         error = 'Beverage type is required.'
-    if roast_type is None:
+    if not roast_type:
         error = 'Roast type is required.'
-    if time is None:
+    if not time:
         error = 'Time is required.'
 
-    try:
-        db_local.execute(
-            "INSERT INTO preprogrammed_coffee (user_id, beverage_id, roast_type, syrup, start_time) VALUES (?, ?, ?, ?, ?)",
-            (g.user[0], beverage_type, roast_type, syrup, time)
-        )
-        db_local.commit()
-        return jsonify({
-            'status': 'Preprogrammed coffee has been successfully saved!',
-            'data': {
-                'username': g.user[1],
-                'beverage_type': beverage_type,
-                'roast_type': roast_type,
-                'time': time
-            }
-        }), 403
-    except db_local.DatabaseError:
-        error = 'Error while inserting into database.'
+    if error is None:
+        try:
+            db_local.execute(
+                "INSERT INTO preprogrammed_coffee (user_id, beverage_id, roast_type, syrup, start_time) VALUES (?, ?, ?, ?, ?)",
+                (g.user[0], beverage_type, roast_type, syrup, time)
+            )
+            db_local.commit()
+            return jsonify({
+                'status': 'Preprogrammed coffee has been successfully saved!',
+                'data': {
+                    'username': g.user[1],
+                    'beverage_type': beverage_type,
+                    'roast_type': roast_type,
+                    'time': time
+                }
+            }), 403
+        except db_local.DatabaseError:
+            error = 'Error while inserting into database.'
 
     return jsonify({
         'status': error,
@@ -333,7 +345,7 @@ def program_api():
     }), 403
 
 
-@bp.route('/delete-programmed-coffee', methods=('POST', ))
+@bp.route('/delete-programmed-coffee', methods=('POST',))
 @login_required
 def delete_program():
     db_local = db.get_db()
