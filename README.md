@@ -62,14 +62,13 @@ In other words, Rasputin combines the basic requirments of a coffee machine with
 
 ### Built With
 
-* [Next.js](https://nextjs.org/)
-* [React.js](https://reactjs.org/)
-* [Vue.js](https://vuejs.org/)
-* [Angular](https://angular.io/)
-* [Svelte](https://svelte.dev/)
-* [Laravel](https://laravel.com)
+* [Python](https://www.python.org/)
+* [Flask](https://flask.palletsprojects.com/en/2.0.x/)
+* [OpenWeatherMap](https://openweathermap.org/api)
+* [Mqtt](https://mqtt.org/)
+* [Werkzeug](https://werkzeug.palletsprojects.com/en/2.0.x/)
+* [WTForms](https://wtforms.readthedocs.io/en/3.0.x/)
 * [Bootstrap](https://getbootstrap.com)
-* [JQuery](https://jquery.com)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
