@@ -1,7 +1,7 @@
 import os
 from threading import Thread
 
-from flask import Flask, request, g, render_template, flash
+from flask import Flask, request, g, render_template, flash, jsonify
 from flask_mqtt import Mqtt
 from flask_socketio import SocketIO
 
@@ -160,6 +160,237 @@ def create_app(test_config=None):
             return render_template('home.html', title='Home', form=form, preference=preference, 
                                     coffee_level = current_state['coffee_quantity'], milk_level = current_state['milk_quantity'], 
                                     syrup_level = current_state['syrup_quantity'], **context)
+
+    @app.route('/api', methods=('GET', 'POST'))
+    def home_api():
+        # TEMPERTATURE API
+        local_db = db.get_db()
+        cursor = local_db.cursor()
+
+        error = None
+
+        # VERIFY MACHINE STATE
+        # getting the machine state
+        cursor.execute("SELECT * from machine_state")
+        current_state = cursor.fetchone()
+
+        if current_state['broken']:
+            error = 'Rasputin has a technical problem. Please check.'
+        if current_state['coffee_quantity'] < db.get_min_coffee_val():
+            error = 'Please, refill the machine with coffee. Is running low.'
+        if current_state['milk_quantity'] < db.get_min_milk_val():
+            error = 'Please, refill the machine with milk. Is running low.'
+        if current_state['syrup_quantity'] < 10:
+            error = 'Please, refill the machine with syrup. Is running low.'
+
+        if error:
+            return jsonify({'status': error}), 403
+
+        # MAKE COFFEE FORM
+        # getting all beverage types
+        cursor.execute("SELECT * FROM beverages_types")
+        beverage_list = cursor.fetchall()
+
+        # form = forms.CoffeeOptionsForm()
+        # form.beverage_type.choices = [(item['id'], item['name']) for item in beverage_list]
+
+        if request.method == 'POST':
+
+            beverage_type = request.form['beverage_type']
+            roast_type = request.form['roast_type']
+            syrup = True if request.form.get('syrup') else False
+
+            if not beverage_type:
+                error = 'Beverage type is required.'
+            if not roast_type:
+                error = 'Roast type is required.'
+
+            if error is None:
+                cursor.execute("SELECT * from beverages_types WHERE id = ?", (beverage_type,))
+                beverage = cursor.fetchone()
+
+                if beverage['coffee_quantity'] > current_state['coffee_quantity']:
+                    error = "Not enough coffee in the machine."
+                if beverage['milk_quantity'] > current_state['milk_quantity']:
+                    error = "Not enough milk in the machine."
+                if syrup and current_state['syrup_quantity'] < 10:
+                    error = "Not enough syrup in the machine."
+
+                if error is None:
+                    #flash('Rasputin is working on your coffee...', 'success')
+                    local_db.execute(
+                        "UPDATE machine_state SET coffee_quantity = ?, milk_quantity = ?, syrup_quantity = ? WHERE id  = ?",
+                        (current_state[1] - beverage[2], current_state[2] - beverage[3],
+                         current_state[3] - (10 if syrup else 0), current_state[0])
+                    )
+                    local_db.commit()
+                    return jsonify({'status': 'Rasputin is working on your coffee...',
+                                    'data': {
+                                        'name': beverage['name']
+                                    }}), 200
+                else:
+                    return jsonify({'status': error}), 403
+            else:
+                return jsonify({'status': error}), 403
+
+        preference = False
+        if g.user:
+            # USER PREFERERENCE
+            cursor.execute("SELECT id FROM user_preference WHERE user_id = ?", (g.user[0],))
+            preference = True if cursor.fetchone() else False
+
+            # PROGRAMMED COFFEES
+            current_time = datetime.now().strftime("%H:%M")
+            coffee = cursor.execute("SELECT b.name FROM preprogrammed_coffee p JOIN beverages_types b "
+                                    " ON p.beverage_id = b.id"
+                                    " WHERE user_id = ? AND start_time = ?",
+                           (g.user[0], current_time)).fetchone()
+
+            if coffee:
+                return jsonify({'status': 'Rasputin is working on your preprogrammed coffee',
+                                'data': {
+                                    'name': coffee['name']
+                                }}), 403
+
+        #current_temperature = suggestion.get_temperature()[1]
+        # if current_temperature:
+        #     current_temperature_celsius = round(current_temperature - 273.15, 2)
+        #
+        #     return render_template('home.html', title='Home', temp=current_temperature_celsius, form=form,
+        #                            preference=preference, coffee_level=current_state['coffee_quantity'],
+        #                            milk_level=current_state['milk_quantity'],
+        #                            syrup_level=current_state['syrup_quantity'], **context)
+        # else:
+        #     error = f"Error getting temperature for {suggestion.get_temperature()[0].title()}"
+        #     flash(error)
+        #     return render_template('home.html', title='Home', form=form, preference=preference,
+        #                            coffee_level=current_state['coffee_quantity'],
+        #                            milk_level=current_state['milk_quantity'],
+        #                            syrup_level=current_state['syrup_quantity'], **context)
+        return jsonify({'status': 'Rasputin is idle'}), 200
+
+    # http: // localhost: 5000 / api / start_coffee?beverage_type = 1 & roast_type = high
+    # to test if machine is able to start working on coffee based on user's preferences
+    @app.route('/api/start_coffee')
+    def home_api_start_coffee():
+        # TEMPERTATURE API
+        local_db = db.get_db()
+        cursor = local_db.cursor()
+
+        error = None
+
+        # VERIFY MACHINE STATE
+        # getting the machine state
+        cursor.execute("SELECT * from machine_state")
+        current_state = cursor.fetchone()
+
+        if current_state['broken']:
+            error = 'Rasputin has a technical problem. Please check.'
+        if current_state['coffee_quantity'] < db.get_min_coffee_val():
+            error = 'Please, refill the machine with coffee. Is running low.'
+        if current_state['milk_quantity'] < db.get_min_milk_val():
+            error = 'Please, refill the machine with milk. Is running low.'
+        if current_state['syrup_quantity'] < 10:
+            error = 'Please, refill the machine with syrup. Is running low.'
+
+        if error:
+            return jsonify({'status': error}), 403
+
+        # MAKE COFFEE FORM
+        # getting all beverage types
+        cursor.execute("SELECT * FROM beverages_types")
+        beverage_list = cursor.fetchall()
+
+        # form = forms.CoffeeOptionsForm()
+        # form.beverage_type.choices = [(item['id'], item['name']) for item in beverage_list]
+
+        beverage_type = request.args.get('beverage_type')
+        roast_type = request.args.get('roast_type')
+        syrup = True if request.args.get('syrup') else False
+
+        if not beverage_type:
+            error = 'Beverage type is required.'
+        if not roast_type:
+            error = 'Roast type is required.'
+
+        if error is None:
+            cursor.execute("SELECT * from beverages_types WHERE id = ?", (beverage_type,))
+            beverage = cursor.fetchone()
+
+            if beverage['coffee_quantity'] > current_state['coffee_quantity']:
+                error = "Not enough coffee in the machine."
+            if beverage['milk_quantity'] > current_state['milk_quantity']:
+                error = "Not enough milk in the machine."
+            if syrup and current_state['syrup_quantity'] < 10:
+                error = "Not enough syrup in the machine."
+
+            if error is None:
+                # flash('Rasputin is working on your coffee...', 'success')
+                local_db.execute(
+                    "UPDATE machine_state SET coffee_quantity = ?, milk_quantity = ?, syrup_quantity = ? WHERE id  = ?",
+                    (current_state[1] - beverage[2], current_state[2] - beverage[3],
+                     current_state[3] - (10 if syrup else 0), current_state[0])
+                )
+                local_db.commit()
+                return jsonify({'status': 'Rasputin is working on your coffee...',
+                                'data': {
+                                    'name': beverage['name']
+                                }}), 200
+            else:
+                return jsonify({'status': error}), 403
+        else:
+            return jsonify({'status': error}), 403
+
+    # to test if machine starts working on the preprogrammed coffee
+    # current time and current user are extracted automatically
+    @app.route('/api/preprogrammed_coffee')
+    def home_api_preprogrammed_coffee():
+        # TEMPERTATURE API
+        local_db = db.get_db()
+        cursor = local_db.cursor()
+
+        error = None
+
+        # VERIFY MACHINE STATE
+        # getting the machine state
+        cursor.execute("SELECT * from machine_state")
+        current_state = cursor.fetchone()
+
+        if current_state['broken']:
+            error = 'Rasputin has a technical problem. Please check.'
+        if current_state['coffee_quantity'] < db.get_min_coffee_val():
+            error = 'Please, refill the machine with coffee. Is running low.'
+        if current_state['milk_quantity'] < db.get_min_milk_val():
+            error = 'Please, refill the machine with milk. Is running low.'
+        if current_state['syrup_quantity'] < 10:
+            error = 'Please, refill the machine with syrup. Is running low.'
+
+        if error:
+            return jsonify({'status': error}), 403
+
+        # MAKE COFFEE FORM
+        # getting all beverage types
+        cursor.execute("SELECT * FROM beverages_types")
+        beverage_list = cursor.fetchall()
+
+        preference = False
+        if g.user:
+            # PROGRAMMED COFFEES
+            current_time = datetime.now().strftime("%H:%M")
+            coffee = cursor.execute("SELECT b.name FROM preprogrammed_coffee p JOIN beverages_types b"
+                                    " ON p.beverage_id = b.id"
+                                    " WHERE user_id = ? AND start_time = ?",
+                           (g.user[0], current_time)).fetchone()
+
+            if coffee:
+                return jsonify({'status': 'Rasputin is working on your preprogrammed coffee',
+                                'data': {
+                                    'name': coffee['name']
+                                }}), 200
+            else:
+                return jsonify({'status': 'No preprogramned coffee to work on'}), 200
+        else:
+            return jsonify({'status': 'You have to log in to start scheduling the preparation of your coffee'}), 200
 
     @app.route('/status')
     def get_status_api():
