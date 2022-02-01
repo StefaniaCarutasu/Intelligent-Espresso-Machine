@@ -1,0 +1,610 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Intelligent-Espresso-Machine",
+    "description": "OpenAPI Specification.",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    },
+    "contact": {
+      "name": "Rasputin",
+      "email": "rasputin@gmail.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:5000/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "auth"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Endpoint for registering new user",
+        "operationId": "register",
+        "description": "Register new users",
+        "tags": [
+            "auth"
+        ],
+        "requestBody":{
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json":{
+              "schema":{
+                "$ref": "#/components/schemas/RegistrationRequestData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200":{
+            "$ref": "#/components/responses/SuccessfulRegister"
+          },
+          "403": {
+            "$ref": "#/components/responses/FailedRegistration"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Endpoint for login existing user",
+        "operationId": "login",
+        "description": "Login existing users",
+        "tags": [
+          "auth"
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/SuccessfulLogin"
+          },
+          "403": {
+            "$ref": "#/components/responses/FailedLogin"
+          }
+        }
+      }
+    },
+
+    "/profile/api/user-profile":{
+      "post":{
+        "summary": "Update the user's profile",
+        "operationId": "user_profile_api",
+        "description": "Update the user's profile",
+        "tags":[
+          "functions"
+        ],
+        "responses":{
+          "200": {
+            "description": "Successfully updated the profile",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EditResponse"
+                }
+              }
+            }
+          },
+
+          "403": {
+            "description": "Update failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EditFailResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/profile/api/preference":{
+      "post":{
+        "summary": "Update preference list",
+        "operationId": "preference_api",
+        "description": "Update preference list",
+        "tags":[
+          "functions"
+        ],
+        "responses":{
+          "200": {
+            "description": "Successfully updated the preference list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EditResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Failure at updating the preference list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EditFailResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/profile/api/program":{
+      "post":{
+        "summary": "Program coffee making",
+        "operationId": "program_api",
+        "description": "Program coffee making",
+        "tags":[
+          "functions"
+        ],
+        "responses":{
+          "200": {
+            "description": "Programmed coffee has been successfully saved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProgramResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error at programming coffee",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProgramFailResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/profile/api/delete-programmed-coffee":{
+      "post":{
+        "summary": "Delete the programmed coffee",
+        "operationId": "delete_program_api",
+        "description": "Delete the programmed coffee",
+        "tags":[
+          "functions"
+        ],
+        "responses":{
+          "200": {
+            "description": "Successfully deleted the programmed coffee",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteCoffeeResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Failed deleting the programmed coffee",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FailedDeleteCoffeeResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/refill/api/coffee":{
+      "get":{
+        "summary": "Refill the coffee",
+        "operationId": "refill_coffee_api",
+        "description": "Refill the coffee",
+        "tags":[
+          "functions"
+        ],
+        "responses":{
+          "200": {
+            "description": "Successfully refilled the coffee",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefillResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Could not refill",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefillResponse"
+                }
+              }
+            }
+          }
+
+        }
+      }
+    },
+
+    "/refill/api/milk":{
+      "get":{
+        "summary": "Refill the milk",
+        "operationId": "refill_milk_api",
+        "description": "Refill the milk",
+        "tags":[
+          "functions"
+        ],
+        "responses":{
+          "200": {
+            "description": "Successfully refilled the milk",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefillResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Could not refill",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefillResponse"
+                }
+              }
+            }
+          }
+
+        }
+      }
+    },
+
+    "/refill/api/syrup":{
+      "get":{
+        "summary": "Refill the syrup",
+        "operationId": "refill_syrup_api",
+        "description": "Refill the syrup",
+        "tags":[
+          "functions"
+        ],
+        "responses":{
+          "200": {
+            "description": "Successfully refilled the syrup",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefillResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Could not refill",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefillResponse"
+                }
+              }
+            }
+          }
+
+        }
+      }
+    },
+
+    "/suggestion/api/temperature":{
+      "get":{
+        "summary": "Make recommendation depending on the current temperature",
+        "operationId": "search_suggestions_temperature_api",
+        "description": "Make recommendation depending on the current temperature",
+        "tags":[
+          "functions"
+        ],
+        "responses":{
+          "200": {
+            "description": "Successfully searched for suggestions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuggestionsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/suggestion/api/bloodPressure":{
+      "get":{
+        "summary": "Make recommendation depending on the user's blood pressure",
+        "operationId": "search_suggestions_bloodPressure_api",
+        "description": "Make recommendation depending on the user's blood pressure",
+        "tags":[
+          "functions"
+        ],
+        "responses":{
+          "200": {
+            "description": "Successfully searched for suggestions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuggestionsResponse"
+                }
+              }
+            }
+          },
+
+          "403": {
+            "description": "Could not send the form",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FailedSuggestionsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "StatusResponse":{
+        "type": "object",
+        "properties":{
+          "status":{
+            "type": "string"
+          }
+        }
+      },
+      "RegistrationRequestData":{
+        "type": "object",
+        "properties":{
+          "username": {
+            "type": "string"
+          },
+          "password":{
+            "type":"string"
+          }
+        }
+      },
+      "HeadrestResponse":{
+        "type": "object",
+        "properties":{
+          "status": {
+            "type": "string"
+          },
+          "data":{
+            "type":"object",
+            "properties":{
+              "id":{
+                "type":"integer"
+              },
+              "timestamp":{
+                "type":"string"
+              },
+              "value":{
+                "type":"string"
+              }
+            }
+          }
+        }
+      },
+      "EditResponse":{
+        "type": "object",
+        "properties":{
+          "status": {
+            "type": "string"
+          },
+          "data":{
+            "type":"object",
+            "properties":{
+              "username":{
+                "type":"string"
+              },
+              "birth_date":{
+                "type":"string"
+              }
+            }
+          }
+        }
+      },
+      "EditFailResponse":{
+        "type": "object",
+        "properties":{
+          "status": {
+            "type": "string"
+          },
+          "data":{
+            "type":"object",
+            "properties":{
+              "username":{
+                "type":"string"
+              },
+              "birth_date":{
+                "type":"string"
+              }
+            }
+          }
+        }
+      },
+      "ProgramResponse":{
+        "type": "object",
+        "properties":{
+          "status": {
+            "type": "string"
+          },
+          "data":{
+            "type":"object",
+            "properties":{
+              "username":{
+                "type":"string"
+              },
+              "beverage_type":{
+                "type":"string"
+              },
+              "roast_type":{
+                "type":"string"
+              },
+              "time":{
+                "type":"string"
+              }
+            }
+          }
+        }
+      },
+      "ProgramFailResponse":{
+        "type": "object",
+        "properties":{
+          "status": {
+            "type": "string"
+          },
+          "data":{
+            "type":"object",
+            "properties":{
+              "username":{
+                "type":"string"
+              },
+              "beverage_type":{
+                "type":"string"
+              },
+              "roast_type":{
+                "type":"string"
+              },
+              "time":{
+                "type":"string"
+              }
+            }
+          }
+        }
+      },
+      "DeleteCoffeeResponse":{
+        "type": "object",
+        "properties":{
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "FailedDeleteCoffeeResponse":{
+        "type": "object",
+        "properties":{
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "RefillResponse":{
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "coffee_quantity": {
+                "type": "integer"
+              },
+              "milk_quantity": {
+                "type": "integer"
+              },
+              "syrup_quantity": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "SuggestionsResponse":{
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "coffee_quantity": {
+                "type": "integer"
+              },
+              "milk_quantity": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "FailedSuggestionsResponse":{
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "responses": {
+      "SuccessfullRegister": {
+        "description":"New user has successfully registered",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/StatusResponse"
+            }
+          }
+        }
+      },
+      "FailedRegistration": {
+        "description":"Authentication failed",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/StatusResponse"
+            }
+          }
+        }
+      },
+      "SuccessfullLogin": {
+        "description":"New user has successfully logged in",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/StatusResponse"
+            }
+          }
+        }
+      },
+      "FailedLogin": {
+        "description":"Login failed",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/StatusResponse"
+            }
+          }
+        }
+      }
+    }
+  }
+}

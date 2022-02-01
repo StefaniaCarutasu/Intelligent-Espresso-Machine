@@ -42,14 +42,14 @@
                 <div class="form-group">
                     {{ form.submit(class="btn btn-outline-info") }}
                 </div>
-                {% if preference %}
-                    <div class="form-group">
-                        <button class="btn btn-outline-info" type="submit">Make favorite</button>
-                    </div>
-                {% endif %}
             </form>
         </div>
-        <div class="container-fluid">
+        {% if preference %}
+        <div class="form-group">
+            <a class="btn btn-outline-info" href="{{ url_for('profile.make_favorite') }}">Make favorite</a>
+        </div>
+        {% endif %}
+        <div class="form-group">
             <a class="btn btn-outline-info" href="{{ url_for('refill.refill_coffee') }}">Refill coffee</a>
             <a class="btn btn-outline-info" href="{{ url_for('refill.refill_milk') }}">Refill milk</a>
             <a class="btn btn-outline-info" href="{{ url_for('refill.refill_syrup') }}">Refill syrup</a>
