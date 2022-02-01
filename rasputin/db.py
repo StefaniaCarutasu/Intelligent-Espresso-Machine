@@ -111,6 +111,7 @@ def populate_machine_state():
         (1000, 1000, 100, False),
     )
     db_local.commit()
+    click.echo("Machine state modified")
 
 @click.command(name='change-machine-state')
 @with_appcontext

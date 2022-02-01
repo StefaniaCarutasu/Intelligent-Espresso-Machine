@@ -147,12 +147,12 @@ def preference():
             current_app.config['STATUS_API'] = error
 
         if error is None:
-            if preference is not None:
+            if preference:
                 # deleting previous preference
                 try:
                     db_local.execute(
-                        "DELETE FROM user_preference WHERE id = ?",
-                        (preference[0],)
+                        "UPDATE user_preference SET beverage_id = ? roast_type = ? syrup = ? WHERE user_id = ?",
+                    (beverage_type, roast_type, syrup, g.user[0])
                     )
                     with current_app.app_context():
                         current_app.config['STATUS_API'] = 'Preference list updated successfully!'
@@ -160,20 +160,21 @@ def preference():
                     error = 'Error while deleting from database.'
                     with current_app.app_context():
                         current_app.config['STATUS_API'] = error
-
-            try:
-                db_local.execute(
-                    "INSERT INTO user_preference (user_id, beverage_id, roast_type, syrup) VALUES (?, ?, ?, ?)",
-                    (g.user[0], beverage_type, roast_type, syrup)
-                )
-                db_local.commit()
-                with current_app.app_context():
-                    current_app.config['STATUS_API'] = 'Preference list updated successfully!'
-                return redirect(url_for('profile.user_profile'))
-            except db_local.DatabaseError:
-                error = 'Error while inserting into database.'
-                with current_app.app_context():
-                    current_app.config['STATUS_API'] = error
+            
+            else:
+                try:
+                    db_local.execute(
+                        "INSERT INTO user_preference (user_id, beverage_id, roast_type, syrup) VALUES (?, ?, ?, ?)",
+                        (g.user[0], beverage_type, roast_type, syrup)
+                    )
+                    db_local.commit()
+                    with current_app.app_context():
+                        current_app.config['STATUS_API'] = 'Preference list updated successfully!'
+                    return redirect(url_for('profile.user_profile'))
+                except db_local.DatabaseError:
+                    error = 'Error while inserting into database.'
+                    with current_app.app_context():
+                        current_app.config['STATUS_API'] = error
 
     context['status'] = error
     with current_app.app_context():
@@ -204,41 +205,38 @@ def preference_api():
         error = 'Roast type is required.'
 
     if error is None:
-        if preference is not None:
+        if preference:
             # deleting previsious preferance
             try:
                 db_local.execute(
-                    "DELETE FROM user_preference WHERE id = ?",
-                    (preference[0],)
+                    "UPDATE user_preference SET beverage_id = ? roast_type = ? syrup = ? WHERE user_id = ?",
+                    (beverage_type, roast_type, syrup, g.user[0])
                 )
             except db_local.DatabaseError:
-                error = 'Error while deleting from database.'
+                error = 'Error while updating database.'
+        else:
+            try:
+                db_local.execute(
+                    "INSERT INTO user_preference (user_id, beverage_id, roast_type, syrup) VALUES (?, ?, ?, ?)",
+                    (g.user[0], beverage_type, roast_type, syrup)
+                )
+                db_local.commit()
+            except db_local.DatabaseError:
+                error = 'Error while inserting into database.'
 
-        try:
-            db_local.execute(
-                "INSERT INTO user_preference (user_id, beverage_id, roast_type, syrup) VALUES (?, ?, ?, ?)",
-                (g.user[0], beverage_type, roast_type, syrup)
-            )
-            db_local.commit()
+        if error is None:
             return jsonify({
                 'status': 'Preference list updated successfully!',
                 'data': {
                     'username': g.user[1],
                     'beverage_type': beverage_type,
                     'roast_type': roast_type
-                }
-            }), 200
-        except db_local.DatabaseError:
-            error = 'Error while inserting into database.'
+                    }
+                }), 200
 
     return jsonify({
         'status': error,
-        'data': {
-            'username': g.user[1],
-            'beverage_type': beverage_type,
-            'roast_type': roast_type
-        }
-    }), 403
+        }), 403
 
 
 # USER PROGRAMMED COFFEES

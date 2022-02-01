@@ -113,7 +113,7 @@ class RasputinApiTestCase(TestCase):
         assert json_res['status'] == "Favourite coffee doesn't exist."
         """
 
-        # self.coffee_preference(beverage_type, roast_type, syrup)
+        self.coffee_preference(beverage_type, roast_type, syrup)
 
         res = self.make_favorite()
         json_res = json.loads(res.data.decode())
