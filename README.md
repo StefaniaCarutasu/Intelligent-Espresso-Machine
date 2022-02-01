@@ -44,9 +44,17 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+![Product Name Screen Shot](https://user-images.githubusercontent.com/62221313/151992718-1631c628-1cfa-4602-8fdb-04ef52ebabee.png)
 
+Did you ever wish to have the perfect coffee just a button press away? In that case, your wish is about to come true with Rasputin. Our intelligent coffee machine is designed to suit all of your needs and even some you never knew you had.
 
+The machine comes with a variety of coffee recipes which can be personalized by choosing the roast level of the coffee (including the option for decaffeinated) and whether to add syrup or not to the beverage. It can also make suggestions according to the outside temperature or the user's blood pressure level, which comes in handy for those with heart problems who still want to enjoy a nice cup of coffee.
+
+Each user has a different profile where he can set his favorite beverage which from that moment on can be made with just a button press. Users can also program the machine to make them a coffee at any given time during the day. No more running around in the morning to prepare your coffee. Let Rasputin take care of it and enjoy waking up to the smell of fresh coffee.
+
+Our machine is constantly checking its internal state, letting you know when its running low on coffee, milk or syrup. It also checks to see if everything is working normally to let you know if it needs any type of mentenace.
+
+In other words, Rasputin combines the basic requirments of a coffee machine with some 21st century features to elevate your coffee making experience.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
