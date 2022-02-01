@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, redirect, url_for, jsonify
+from flask import Blueprint, flash, redirect, url_for, jsonify, current_app
 from rasputin.auth import login_required
 from . import db
 from .db import get_db
@@ -25,10 +25,15 @@ def refill_coffee():
             (1000, id)
         )
         db_local.commit()
-
-        flash('Rasputin is now full on coffee.', 'success')
+        message = 'Rasputin is now full on coffee.'
+        with current_app.app_context():
+            current_app.config['STATUS_API'] = message
+        flash(message, 'success')
     except db_local.DatabaseError:
-        flash('Error while updating database.', 'danger')
+        message = 'Error while updating database.'
+        with current_app.app_context():
+            current_app.config['STATUS_API'] = message
+        flash(message, 'danger')
     finally:
         return redirect(url_for('home'))
 
@@ -81,10 +86,15 @@ def refill_milk():
             (1000, id)
         )
         db_local.commit()
-
-        flash('Rasputin is now full on milk.', 'success')
+        message = 'Rasputin is now full on milk.'
+        with current_app.app_context():
+            current_app.config['STATUS_API'] = message
+        flash(message, 'success')
     except db_local.DatabaseError:
-        flash('Error while updating database.', 'danger')
+        message = 'Error while updating database.'
+        with current_app.app_context():
+            current_app.config['STATUS_API'] = message
+        flash(message, 'danger')
     finally:
         return redirect(url_for('home'))
 
@@ -136,10 +146,15 @@ def refill_syrup():
             (100, id)
         )
         db_local.commit()
-
-        flash('Rasputin is now full on syrup.', 'success')
+        message = 'Rasputin is now full on syrup.'
+        with current_app.app_context():
+            current_app.config['STATUS_API'] = message
+        flash(message, 'success')
     except db_local.DatabaseError:
-        flash('Error while updating database.', 'danger')
+        message = 'Error while updating database.'
+        with current_app.app_context():
+            current_app.config['STATUS_API'] = message
+        flash(message, 'danger')
     finally:
         return redirect(url_for('home'))
 
