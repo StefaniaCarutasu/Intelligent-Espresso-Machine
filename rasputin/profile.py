@@ -148,7 +148,6 @@ def preference():
             current_app.config['STATUS_API'] = error
 
         if error is None:
-
             if preference is not None:
                 # deleting previous preference
                 try:
@@ -206,8 +205,6 @@ def preference_api():
         error = 'Roast type is required.'
 
     if error is None:
-
-
         if preference is not None:
             # deleting previsious preferance\
             try:
