@@ -9,6 +9,8 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 # REGISTER
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
+    with current_app.app_context():
+        current_app.config['STATUS_API'] = 'Register yourself!'
     form = forms.RegistrationForm()
     context = {'status': None}
     error = None
@@ -92,6 +94,8 @@ def register_api():
 # LOGIN
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
+    with current_app.app_context():
+        current_app.config['STATUS_API'] = 'Log in!'
     form = forms.LoginForm()
     context = {'status': None}
     error = None
