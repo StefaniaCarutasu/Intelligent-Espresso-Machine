@@ -95,7 +95,7 @@ def search_suggestions_bloodPressure_api():
         return jsonify({'status': status}), 403
 
     coffeeTypes = see_suggestions_bloodPressure(systolic, diastolic)
-    return json.dumps([dict(coffeeType) for coffeeType in coffeeTypes])
+    return json.dumps([dict(coffeeType) for coffeeType in coffeeTypes]), 200
 
 
 @bp.route('/temperature', methods=('GET', 'POST'))
@@ -114,4 +114,4 @@ def search_suggestions_temperature_api():
     current_temperature_celsius = round(current_temperature - 273.15, 2)
 
     coffeeTypes = see_suggestions_temperature(current_temperature_celsius)
-    return json.dumps([dict(coffeeType) for coffeeType in coffeeTypes])
+    return json.dumps([dict(coffeeType) for coffeeType in coffeeTypes]), 200
