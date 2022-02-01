@@ -227,7 +227,7 @@ def preference_api():
                     'beverage_type': beverage_type,
                     'roast_type': roast_type
                 }
-            }), 403
+            }), 200
         except db_local.DatabaseError:
             error = 'Error while inserting into database.'
 
@@ -329,7 +329,7 @@ def program_api():
                     'roast_type': roast_type,
                     'time': time
                 }
-            }), 403
+            }), 200
         except db_local.DatabaseError:
             error = 'Error while inserting into database.'
 
@@ -398,9 +398,14 @@ def make_favorite():
         (g.user[0],))
     preference = cursor.fetchone()
 
-    flash('Rasputin is working on favorite coffee...', 'success')
-    with current_app.app_context():
-        current_app.config['STATUS_API'] = 'Rasputin is working on favorite coffee...'
+
+    if preference:
+        flash('Rasputin is working on favorite coffee...', 'success')
+        with current_app.app_context():
+            current_app.config['STATUS_API'] = 'Rasputin is working on favorite coffee...'
+    else:
+        with current_app.app_context():
+            current_app.config['STATUS_API'] = "Favourite coffee doesn't exist."
 
     return redirect(url_for('home'))
 
@@ -414,15 +419,23 @@ def make_favorite_api():
         "SELECT b.name, p.roast_type, p.syrup FROM user_preference p INNER JOIN beverages_types b ON p.beverage_id = b.id WHERE user_id = ?",
         (g.user[0],))
     preference = cursor.fetchone()
-    
+
+    if preference:
+        with current_app.app_context():
+            current_app.config['STATUS_API'] = 'Rasputin is working on favorite coffee...'
+
+        return jsonify({
+                'status': 'Rasputin is working on favorite coffee...',
+                'data': {
+                    'name': preference['name'],
+                    'roast_type': preference['roast_type'],
+                    'syrup': preference['syrup']
+                }
+            }), 200
+
     with current_app.app_context():
-        current_app.config['STATUS_API'] = 'Rasputin is working on favorite coffee...'
+        current_app.config['STATUS_API'] = "Favourite coffee doesn't exist."
 
     return jsonify({
-            'status': 'Rasputin is working on favorite coffee...',
-            'data': {
-                'name': preference['name'],
-                'roast_type': preference['roast_type'],
-                'syrup': preference['syrup']
-            }
-        }), 200
+        'status': "Favourite coffee doesn't exist."
+    }), 403

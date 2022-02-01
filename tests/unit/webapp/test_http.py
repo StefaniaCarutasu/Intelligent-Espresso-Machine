@@ -1,7 +1,7 @@
 from rasputin.__init__ import create_app
 from flask_testing import TestCase
 
-username = 'claudia_'
+username = 'admin'
 email = 'admin@gmail.com'
 password = 'admin1234'
 confirm_password = 'admin1234'
@@ -211,9 +211,11 @@ class RasputinTestCase(TestCase):
 
         # post missing time
         res = self.program_coffee(beverage_type, roast_type, syrup, '')
-        assert self.get_context_variable('status') == 'Time is required.'
 
         assert res.status_code == 200
+        assert self.get_context_variable('status') == 'Time is required.'
+
+
 
     def test_preference(self):
         self.login(username_login, password_login)
@@ -233,9 +235,11 @@ class RasputinTestCase(TestCase):
 
         # post missing roast type
         res = self.coffee_preference(beverage_type, '', syrup)
-        assert self.get_context_variable('status') == 'Roast type is required.'
 
         assert res.status_code == 200
+        assert self.get_context_variable('status') == 'Roast type is required.'
+
+
 
     """
     def test_delete_program(self):
@@ -268,6 +272,8 @@ class RasputinTestCase(TestCase):
 
         assert res.status_code == 200
 
+        self.edit_profile(username_login, dob)
+
     def test_home(self):
         # get user not logged in
         res = self.client.get('/')
@@ -294,9 +300,11 @@ class RasputinTestCase(TestCase):
 
         # post missing roast type
         res = self.coffee_preference(beverage_type, '', syrup)
-        assert self.get_context_variable('status') == 'Roast type is required.'
 
         assert res.status_code == 200
+        assert self.get_context_variable('status') == 'Roast type is required.'
+
+
 
     def test_make_favorite(self):
         # get
