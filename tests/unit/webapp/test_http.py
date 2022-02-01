@@ -9,6 +9,11 @@ confirm_password = 'admin1234'
 username_login = 'stefi'
 password_login = 'stefi1234'
 
+beverage_type = 'Espresso'
+roast_type = 'Medium'
+syrup = ''
+time = '11:15 AM'
+
 
 class RasputinTestCase(TestCase):
     def create_app(self):
@@ -30,6 +35,14 @@ class RasputinTestCase(TestCase):
 
     def logout(self):
         return self.client.get('/auth/logout', follow_redirects=True)
+
+    def program_coffee(self, beverage_type, roast_type, syrup, time):
+        return self.client.post('/program', data=dict(
+            beverage_type=beverage_type,
+            roast_type=roast_type,
+            syrup=syrup,
+            time=time
+        ), follow_redirects=True)
 
     def test_login(self):
         # get
@@ -113,7 +126,7 @@ class RasputinTestCase(TestCase):
         assert res.status_code == 200
 
     def test_refill_coffee(self):
-        self.login(username, password)
+        self.login(username_login, username_login)
 
         request = self.client.get('/refill/coffee', follow_redirects=True)
         html = request.data.decode()
@@ -122,7 +135,7 @@ class RasputinTestCase(TestCase):
         assert request.status_code == 200
 
     def test_refill_milk(self):
-        self.login(username, password)
+        self.login(username_login, username_login)
 
         request = self.client.get('/refill/milk', follow_redirects=True)
         html = request.data.decode()
@@ -131,10 +144,40 @@ class RasputinTestCase(TestCase):
         assert request.status_code == 200
 
     def test_refill_syrup(self):
-        self.login(username, password)
+        self.login(username_login, username_login)
 
         request = self.client.get('/refill/syrup', follow_redirects=True)
         html = request.data.decode()
         print(html)
 
         assert request.status_code == 200
+
+    def test_program(self):
+        self.login(username_login, password_login)
+
+        # get
+        res = self.client.get('/profile/program')
+        html = res.data.decode()  # html-ul intors
+
+        assert res.status_code == 200
+        assert 'Coffee options' in html
+
+        # post missing beverage type
+        res = self.program_coffee('', roast_type, syrup, time)
+
+        assert res.status_code == 404
+
+        # post missing roast type
+        res = self.program_coffee(beverage_type, '', syrup, time)
+
+        assert res.status_code == 404
+
+        # post missing time
+        res = self.program_coffee(beverage_type, roast_type, syrup, '')
+
+        assert res.status_code == 404
+
+
+
+
+

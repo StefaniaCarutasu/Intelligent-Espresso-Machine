@@ -42,7 +42,7 @@
         <div class='message'>
             <p>beverage: {{ preference['name'] }}</p>
             <p>roast type: {{ preference['roast_type'] }}</p>
-            <p>syrup: {% if preference['syrup'] %} Da {% else %} Nu {% endif %}</p>
+            <p>syrup: {% if preference['syrup'] %} Yes {% else %} No {% endif %}</p>
         </div>
     </div>
     <br />
@@ -52,7 +52,7 @@
         <div class='container-fluid'>
             <h6>{{ coffee['name'] }}</h6>
             <p>roast type: {{ coffee['roast_type'] }}</p>
-            <p>syrup: {% if preference['syrup'] %} Da {% else %} Nu {% endif %}</p>
+            <p>syrup: {% if preference['syrup'] %} Yes {% else %} No {% endif %}</p>
             <p>time: {{ coffee['start_time'] }}</p>
             <form method="post" action="{{ url_for('profile.delete_program') }}">
                 <input type="hidden" value="{{ coffee['id'] }}" name="program_to_delete">

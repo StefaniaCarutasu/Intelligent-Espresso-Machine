@@ -152,11 +152,14 @@ def create_app(test_config=None):
             current_temperature_celsius = round(current_temperature - 273.15, 2)
 
             return render_template('home.html', title='Home', temp=current_temperature_celsius, form=form,
-                                   preference=preference, **context)
+                                   preference=preference, coffee_level = current_state['coffee_quantity'], 
+                                   milk_level = current_state['milk_quantity'], syrup_level = current_state['syrup_quantity'], **context)
         else:
             error = f"Error getting temperature for {suggestion.get_temperature()[0].title()}"
             flash(error)
-            return render_template('home.html', title='Home', form=form, preference=preference, **context)
+            return render_template('home.html', title='Home', form=form, preference=preference, 
+                                    coffee_level = current_state['coffee_quantity'], milk_level = current_state['milk_quantity'], 
+                                    syrup_level = current_state['syrup_quantity'], **context)
 
     @app.route('/status')
     def get_status_api():
