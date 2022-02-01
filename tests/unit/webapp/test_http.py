@@ -6,14 +6,18 @@ email = 'admin@gmail.com'
 password = 'admin1234'
 confirm_password = 'admin1234'
 
-username_login = 'stefi'
-password_login = 'stefi1234'
+username_login = 'user'
+password_login = 'user1234'
 
 beverage_type = 'Espresso'
 roast_type = 'Medium'
 syrup = ''
 time = '11:15 AM'
 
+program_id = 1
+
+new_username = 'Stefi'
+dob = ''
 
 class RasputinTestCase(TestCase):
     def create_app(self):
@@ -37,12 +41,38 @@ class RasputinTestCase(TestCase):
         return self.client.get('/auth/logout', follow_redirects=True)
 
     def program_coffee(self, beverage_type, roast_type, syrup, time):
-        return self.client.post('/program', data=dict(
+        return self.client.post('/profile/program', data=dict(
             beverage_type=beverage_type,
             roast_type=roast_type,
             syrup=syrup,
             time=time
         ), follow_redirects=True)
+
+    def coffee_preference(self, beverage_type, roast_type, syrup):
+        return self.client.post('/profile/preference', data=dict(
+            beverage_type=beverage_type,
+            roast_type=roast_type,
+            syrup=syrup
+        ), follow_redirects=True)
+
+    def delete_program(self, program_id):
+        return self.client.post('/profile/delete-programmed-coffee', data=dict(
+            id=program_id
+        ), follow_redirects=True)
+
+    def edit_profile(self, username, dob):
+        return self.client.post('/profile/user-profile', data=dict(
+            username=username,
+            birth_date=dob
+        ), follow_redirects=True)
+
+    def home(self, beverage_type, roast_type, syrup):
+        return self.client.post('/', data=dict(
+            beverage_type=beverage_type,
+            roast_type=roast_type,
+            syrup=syrup
+        ), follow_redirects=True)
+
 
     def test_login(self):
         # get
@@ -163,21 +193,107 @@ class RasputinTestCase(TestCase):
         assert 'Coffee options' in html
 
         # post missing beverage type
-        res = self.program_coffee('', roast_type, syrup, time)
+        res = self.program_coffee("", roast_type, syrup, time)
+        print(res.data.decode())
 
-        assert res.status_code == 404
+
+        assert res.status_code == 200
+        assert self.get_context_variable('status') == 'Beverage type is required.'
 
         # post missing roast type
         res = self.program_coffee(beverage_type, '', syrup, time)
 
-        assert res.status_code == 404
+        assert res.status_code == 200
+        assert self.get_context_variable('status') == 'Roast type is required.'
 
         # post missing time
         res = self.program_coffee(beverage_type, roast_type, syrup, '')
+        assert self.get_context_variable('status') == 'Time is required.'
 
-        assert res.status_code == 404
+        assert res.status_code == 200
+
+    def test_preference(self):
+        self.login(username_login, password_login)
+
+        # get
+        res = self.client.get('/profile/preference')
+        html = res.data.decode()  # html-ul intors
+
+        assert res.status_code == 200
+        assert 'Coffee options' in html
+
+        # post missing beverage type
+        res = self.coffee_preference('', roast_type, syrup)
+
+        assert res.status_code == 200
+        assert self.get_context_variable('status') == 'Beverage type is required.'
+
+        # post missing roast type
+        res = self.coffee_preference(beverage_type, '', syrup)
+        assert self.get_context_variable('status') == 'Roast type is required.'
+
+        assert res.status_code == 200
+
+    """
+    def test_delete_program(self):
+        self.login(username_login, password_login)
+
+        # post
+        res = self.delete_program(program_id)
+
+        assert res.status_code == 200
+    """
+
+    def test_profile(self):
+        self.login(username_login, password_login)
+
+        # get
+        res = self.client.get('/profile/user-profile')
+        html = res.data.decode()  # html-ul intors
+
+        assert res.status_code == 200
+        assert 'Profile' in html
+
+        # post missing username
+        res = self.edit_profile('', dob)
+
+        assert res.status_code == 200
+
+        # post
+
+        res = self.edit_profile(new_username, dob)
+
+        assert res.status_code == 200
+
+    def test_home(self):
+        # get user not logged in
+        res = self.client.get('/')
+        html = res.data.decode()  # html-ul intors
+
+        assert res.status_code == 200
+        assert 'Coffee options' not in html
+
+        self.login(username_login, password_login)
+
+        # get user logged in
+        res = self.client.get('/')
+        html = res.data.decode()  # html-ul intors
+
+        assert res.status_code == 200
+        assert 'Coffee options' in html
 
 
+        # post missing beverage type
+        res = self.home('', roast_type, syrup)
+
+        assert res.status_code == 200
+        assert self.get_context_variable('status') == 'Beverage type is required.'
+
+        # post missing roast type
+        res = self.coffee_preference(beverage_type, '', syrup)
+        assert self.get_context_variable('status') == 'Roast type is required.'
+
+        assert res.status_code == 200
 
 
 

@@ -34,7 +34,7 @@ def user_profile():
         username = request.form['username']
         birth_date = request.form['birth_date']
 
-        if username is None:
+        if not username:
             error = 'Username required.'
         
         if error is None:
@@ -78,33 +78,39 @@ def preference():
         roast_type = request.form['roast_type']
         syrup = True if request.form.get('syrup') else False
 
-        if beverage_type is None:
+        if not beverage_type:
             error = 'Beverage type is required.'
-        if roast_type is None:
+        if not roast_type:
             error = 'Roast type is required.'
 
-        if preference is not None:
-            # deleting previsious preferance\
+        context['status'] = error
+
+        if error is None:
+            if preference is not None:
+                # deleting previsious preferance\
+                try:
+                    db_local.execute(
+                        "DELETE FROM user_preference WHERE id = ?",
+                        (preference[0],)
+                    )
+                except db_local.DatabaseError:
+                    error = 'Error while deleting from database.'
+                    context['status'] = error
+
             try:
                 db_local.execute(
-                    "DELETE FROM user_preference WHERE id = ?", 
-                    (preference[0],)
+                    "INSERT INTO user_preference (user_id, beverage_id, roast_type, syrup) VALUES (?, ?, ?, ?)",
+                    (g.user[0], beverage_type, roast_type, syrup)
                 )
+                db_local.commit()
+
+                return redirect(url_for('profile.user_profile'))
             except db_local.DatabaseError:
-                error = 'Error while deleting from database.'
-
-        try:
-            db_local.execute(
-                "INSERT INTO user_preference (user_id, beverage_id, roast_type, syrup) VALUES (?, ?, ?, ?)",
-                (g.user[0], beverage_type, roast_type, syrup)
-            )
-            db_local.commit()
-
-            return redirect(url_for('profile.user_profile'))
-        except db_local.DatabaseError:
-            error = 'Error while inserting into database.'
+                error = 'Error while inserting into database.'
     
-    context['status'] = error
+                context['status'] = error
+
+
     return render_template('profile/preference-form.html', title='Preference form', form=form, **context)
 
 
@@ -120,8 +126,9 @@ def program():
     form = forms.ProgrammedCoffeeForm()
     form.beverage_type.choices = [(item[0], item[1]) for item in beverage_list]
 
-    context = {'status': None}
     error = None
+    context = {'status': None}
+
 
     if request.method == 'POST':
         beverage_type = request.form['beverage_type']
@@ -129,25 +136,29 @@ def program():
         syrup = True if request.form.get('syrup') else False
         time = request.form['time']
 
-        if beverage_type is None:
+        if not beverage_type:
             error = 'Beverage type is required.'
-        if roast_type is None:
+        if not roast_type:
             error = 'Roast type is required.'
-        if time is None:
+        if not time:
             error = 'Time is required.'
 
-        try:
-            db_local.execute(
-                "INSERT INTO preprogrammed_coffee (user_id, beverage_id, roast_type, syrup, start_time) VALUES (?, ?, ?, ?, ?)",
-                (g.user[0], beverage_type, roast_type, syrup, time)
-            )
-            db_local.commit()
+        context['status'] = error
 
-            return redirect(url_for('profile.user_profile'))
-        except db_local.DatabaseError:
-            error = 'Error while inserting into database.'
+        if error is None:
+            try:
+                db_local.execute(
+                    "INSERT INTO preprogrammed_coffee (user_id, beverage_id, roast_type, syrup, start_time) VALUES (?, ?, ?, ?, ?)",
+                    (g.user[0], beverage_type, roast_type, syrup, time)
+                )
+                db_local.commit()
 
-    context['status'] = error
+                return redirect(url_for('profile.user_profile'))
+            except db_local.DatabaseError:
+                error = 'Error while inserting into database.'
+
+                context['status'] = error
+
     return render_template('profile/programmed-coffee-form.html', title='Programmed coffee form', form=form, **context)
 
 @bp.route('/delete-programmed-coffee', methods=('POST', ))

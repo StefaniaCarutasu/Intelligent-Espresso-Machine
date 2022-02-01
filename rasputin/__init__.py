@@ -103,9 +103,9 @@ def create_app(test_config=None):
             roast_type = request.form['roast_type']
             syrup = True if request.form.get('syrup') else False
 
-            if beverage_type is None:
+            if not beverage_type:
                 error = 'Beverage type is required.'
-            if roast_type is None:
+            if not roast_type:
                 error = 'Roast type is required.'
 
             if error is None:
