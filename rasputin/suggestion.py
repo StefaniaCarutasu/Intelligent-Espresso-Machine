@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, request, flash
+import json
+
+from flask import Blueprint, render_template, request, flash, current_app, jsonify
 from . import db, forms, __init__
 import geocoder
 import requests
@@ -79,7 +81,22 @@ def search_suggestions_bloodPressure():
     message = "You might want to try decaf coffee."
 
     context['status'] = error
+    with current_app.app_context():
+        current_app.config['STATUS_API'] = 'Coffee suggestions based on blood pressure'
     return render_template('suggestions/bloodPressure.html', title='Login', form=form, coffeeTypes = coffeeTypes, message = message, **context)
+
+@bp.route('/api/bloodPressure')
+def search_suggestions_bloodPressure_api():
+    systolic = 120
+    diastolic = 80
+
+    if systolic is None or diastolic is None:
+        status = 'Introduce your blood pressure.'
+        return jsonify({'status': status}), 403
+
+    coffeeTypes = see_suggestions_bloodPressure(systolic, diastolic)
+    return json.dumps([dict(coffeeType) for coffeeType in coffeeTypes])
+
 
 @bp.route('/temperature', methods=('GET', 'POST'))
 def search_suggestions_temperature():
@@ -87,4 +104,14 @@ def search_suggestions_temperature():
     current_temperature_celsius = round(current_temperature - 273.15, 2)
 
     coffeeTypes = see_suggestions_temperature(current_temperature_celsius)
+    with current_app.app_context():
+        current_app.config['STATUS_API'] = 'Coffee suggestions based on temperature'
     return render_template('suggestions/temperature.html', title='Login', temp = current_temperature_celsius, coffeeTypes = coffeeTypes )
+
+@bp.route('/api/temperature')
+def search_suggestions_temperature_api():
+    current_temperature = get_temperature()[1]
+    current_temperature_celsius = round(current_temperature - 273.15, 2)
+
+    coffeeTypes = see_suggestions_temperature(current_temperature_celsius)
+    return json.dumps([dict(coffeeType) for coffeeType in coffeeTypes])
