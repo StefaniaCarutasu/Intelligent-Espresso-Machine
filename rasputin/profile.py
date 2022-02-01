@@ -2,6 +2,9 @@ from flask import Blueprint, flash, g, redirect, render_template, request, url_f
 
 from rasputin.auth import login_required
 from . import db, forms
+import traceback
+
+import sys
 
 bp = Blueprint('profile', __name__, url_prefix='/profile')
 
@@ -199,6 +202,8 @@ def preference_api():
     roast_type = request.form['roast_type']
     syrup = True if request.form.get('syrup') else False
 
+
+
     if not beverage_type:
         error = 'Beverage type is required.'
     if not roast_type:
@@ -209,10 +214,15 @@ def preference_api():
             # deleting previsious preferance
             try:
                 db_local.execute(
-                    "UPDATE user_preference SET beverage_id = ? roast_type = ? syrup = ? WHERE user_id = ?",
+                    "UPDATE user_preference SET beverage_id = ?, roast_type = ?, syrup = ? WHERE user_id = ?",
                     (beverage_type, roast_type, syrup, g.user[0])
                 )
-            except db_local.DatabaseError:
+            except db_local.DatabaseError as er:
+                print('SQLite error: %s' % (' '.join(er.args)))
+                print("Exception class is: ", er.__class__)
+                print('SQLite traceback: ')
+                exc_type, exc_value, exc_tb = sys.exc_info()
+                print(traceback.format_exception(exc_type, exc_value, exc_tb))
                 error = 'Error while updating database.'
         else:
             try:
