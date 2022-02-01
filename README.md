@@ -156,12 +156,22 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
+- [x] Register
+- [x] Log in
+- [x] Log out
+- [x] Make coffee
+- [x] Refill coffee
+- [x] Refill milk
+- [x] Refill syrup
+- [x] Edit profile
+   - [x] Change preference
+   - [x] Add programmed coffee
+   - [x] Delete programmed coffee
+- [x] Coffee suggestions     
+    - [x] Based on temperature
+    - [x] Based on blood pressure
 
-See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
+![image](https://user-images.githubusercontent.com/62221313/152016584-729ea77c-8e9e-44f1-90f2-2aa2bda047b4.png)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
