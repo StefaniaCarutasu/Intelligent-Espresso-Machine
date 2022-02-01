@@ -159,10 +159,9 @@ def preference():
                     )
                     with current_app.app_context():
                         current_app.config['STATUS_API'] = 'Preference list updated successfully!'
+                    return redirect(url_for('profile.user_profile'))
                 except db_local.DatabaseError:
                     error = 'Error while deleting from database.'
-                    with current_app.app_context():
-                        current_app.config['STATUS_API'] = error
             
             else:
                 try:
@@ -176,10 +175,11 @@ def preference():
                     return redirect(url_for('profile.user_profile'))
                 except db_local.DatabaseError:
                     error = 'Error while inserting into database.'
-                    with current_app.app_context():
-                        current_app.config['STATUS_API'] = error
 
-    context['status'] = error
+    if error:
+        flash(error, 'danger')
+        context['status'] = error
+
     with current_app.app_context():
         current_app.config['STATUS_API'] = error
     return render_template('profile/preference-form.html', title='Preference form', form=form, **context)
@@ -192,9 +192,6 @@ def preference_api():
     cursor = db_local.cursor()
     cursor.execute("SELECT * FROM user_preference WHERE user_id = ?", (g.user[0],))
     preference = cursor.fetchone()
-
-    cursor.execute("SELECT * FROM beverages_types")
-    beverage_list = cursor.fetchall()
 
     error = None
 
@@ -218,11 +215,6 @@ def preference_api():
                     (beverage_type, roast_type, syrup, g.user[0])
                 )
             except db_local.DatabaseError as er:
-                print('SQLite error: %s' % (' '.join(er.args)))
-                print("Exception class is: ", er.__class__)
-                print('SQLite traceback: ')
-                exc_type, exc_value, exc_tb = sys.exc_info()
-                print(traceback.format_exception(exc_type, exc_value, exc_tb))
                 error = 'Error while updating database.'
         else:
             try:
@@ -291,10 +283,11 @@ def program():
                 return redirect(url_for('profile.user_profile'))
             except db_local.DatabaseError:
                 error = 'Error while inserting into database.'
-                with current_app.app_context():
-                    current_app.config['STATUS_API'] = error
 
-    context['status'] = error
+    if error:
+        flash(error, 'danger')
+        context['status'] = error
+
     with current_app.app_context():
         current_app.config['STATUS_API'] = error
     return render_template('profile/programmed-coffee-form.html', title='Programmed coffee form', form=form, **context)
@@ -305,8 +298,6 @@ def program():
 def program_api():
     db_local = db.get_db()
     cursor = db_local.cursor()
-    cursor.execute("SELECT * FROM beverages_types")
-    beverage_list = cursor.fetchall()
 
     error = None
 
