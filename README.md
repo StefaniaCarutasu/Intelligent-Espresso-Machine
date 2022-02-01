@@ -88,66 +88,55 @@ You need to have python 3 and pip 3 already installed on your machine.
 `pip install virtualenv`
   
 3. Create an environment:  
-macOS/Linux: 
-`python3 -m venv ./`
-  
-Windows: 
+macOS/Linux:
+`python3 -m venv ./`  
+Windows:
 `python -m venv venv`  
 
 4. Activate environment  
-
-macOS/Linux:  
+macOS/Linux:
 `source venv/bin/activate`  
-
-Windows:  
+Windows:
 `venv\Scripts\activate`
 
-5. Install libraries
+5. Install libraries:  
 `pip install -r requirements.txt`
 
-6. Set name value for rasputin:
-macOS/Linux: 
-`export FLASK_APP=rasputin`
-
+6. Set name value for rasputin:  
+macOS/Linux:
+`export FLASK_APP=rasputin`  
 CMD:
-`set FLASK_APP=rasputin`
-
+`set FLASK_APP=rasputin`  
 PowerShell:
-`$env:FLASK_APP = "rasputin"`
+`$env:FLASK_APP = "rasputin"`  
 
-7. Set environment value for development:
-macOS/Linux: 
-`export FLASK_ENV=development`
-
+7. Set environment value for development:  
+macOS/Linux:
+`export FLASK_ENV=development`  
 CMD:
-`set FLASK_ENV=development`
-
+`set FLASK_ENV=development`  
 PowerShell:
-`$env:FLASK_ENV = "development"`
-
+`$env:FLASK_ENV = "development"`  
 
 8. Initialize (or reinitialize) database:  
 `flask init-db`
 
-9. Populate database:
-`flask populate-coffee-table`
+9. Populate database:  
+`flask populate-coffee-table`  
 `flask populate-machine-state`
 
-10. Run  
+10. Run:  
 Http:
-`flask run` or `python -m flask run`
-
-Mqtt:
+`flask run` or `python -m flask run`  
+Mqtt:  
 CMD PROMPT 1:
 `cd mosquitto`
-`mosquitto -v`
-
+`mosquitto -v`  
 CMD PROMPT 2:
-`python main.py`
-
+`python main.py`  
 CMD PROMP 3:
 `cd rasputin`
-`python mqtt-comms-sub.py`
+`python mqtt-comms-sub.py`  
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
