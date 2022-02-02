@@ -77,10 +77,10 @@ def search_suggestions_bloodPressure():
     error = None
 
     if request.method == 'POST':
-        systolic = int(request.form['systolic'])
-        diastolic = int(request.form['diastolic'])
+        systolic = request.form['systolic'] if request.form['systolic'] else 0
+        diastolic = request.form['diastolic'] if request.form['diastolic'] else 0
 
-        if systolic is None or diastolic is None:
+        if systolic == 0 or diastolic == 0:
             error = 'Introduce your blood pressure.'
 
     coffeeTypes = see_suggestions_bloodPressure(int(systolic), int(diastolic))

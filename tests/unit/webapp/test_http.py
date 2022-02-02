@@ -19,6 +19,10 @@ program_id = 1
 new_username = 'Stefi'
 dob = ''
 
+systolic = 120
+diastolic = 80
+
+
 class RasputinTestCase(TestCase):
     def create_app(self):
         return create_app({'TESTING': True})
@@ -75,6 +79,15 @@ class RasputinTestCase(TestCase):
 
     def make_favorite(self):
         return self.client.get('/profile/make-favorite', follow_redirects=True)
+
+    def suggestions_bloodPressure(self, systolic, diastolic):
+        return self.client.post('/suggestion/bloodPressure', data=dict(
+            systolic=systolic,
+            diastolic=diastolic
+        ), follow_redirects=True)
+
+    def suggestions_temperature(self):
+        return self.client.get('/suggestion/temperature', follow_redirects=True)
 
 
     def test_login(self):
@@ -304,11 +317,44 @@ class RasputinTestCase(TestCase):
         assert res.status_code == 200
         assert self.get_context_variable('status') == 'Roast type is required.'
 
-
-
     def test_make_favorite(self):
         # get
         self.login(username_login, password_login)
         res = self.make_favorite()
 
         assert res.status_code == 200
+
+    def test_suggestions_bloodPressure(self):
+        # get
+        res = self.client.get('/suggestion/bloodPressure')
+        html = res.data.decode()
+
+        assert res.status_code == 200
+        assert 'Blood Pressure' in html
+
+        # post without systolic value
+        res = self.suggestions_bloodPressure('', diastolic)
+
+        assert res.status_code == 200
+        assert self.get_context_variable('status') == 'Introduce your blood pressure.'
+
+        # post without diastolic value
+        res = self.suggestions_bloodPressure(systolic, '')
+
+        assert res.status_code == 200
+        assert self.get_context_variable('status') == 'Introduce your blood pressure.'
+
+        # post
+        res = self.suggestions_bloodPressure(systolic, diastolic)
+        html = res.data.decode()
+
+        assert res.status_code == 200
+        assert 'Recommended Coffee Types' in html
+
+    def test_suggestions_temperature(self):
+        # get
+        res = self.suggestions_temperature()
+        html = res.data.decode()
+
+        assert res.status_code == 200
+        assert 'Recommended Coffee Types' in html
