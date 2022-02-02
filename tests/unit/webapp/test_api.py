@@ -3,8 +3,8 @@ from rasputin.__init__ import create_app
 from flask_testing import TestCase
 import json
 
-username = 'admin3'
-email = 'admin3@gmail.com'
+username = 'admin5'
+email = 'admin5@gmail.com'
 password = 'admin1234'
 confirm_password = 'admin1234'
 

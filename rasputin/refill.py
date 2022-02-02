@@ -38,7 +38,6 @@ def refill_coffee():
         return redirect(url_for('home'))
 
 @bp.route('/api/coffee')
-@login_required
 def refill_coffee_api():
     db_local = db.get_db()
     id = get_machine_id()
@@ -53,11 +52,11 @@ def refill_coffee_api():
         db_local.commit()
         status = 'Rasputin is now full on coffee.'
         code = 200
-        flash(status, 'success')
+        #flash(status, 'success')
     except db_local.DatabaseError:
         status = 'Error while updating database.'
         code = 403
-        flash(status, 'danger')
+        #flash(status, 'danger')
     finally:
         check = get_db().execute(
             "SELECT coffee_quantity, milk_quantity, syrup_quantity FROM machine_state WHERE id = ?",
@@ -99,7 +98,6 @@ def refill_milk():
         return redirect(url_for('home'))
 
 @bp.route('/api/milk')
-@login_required
 def refill_milk_api():
     db_local = db.get_db()
     id = get_machine_id()
@@ -114,11 +112,11 @@ def refill_milk_api():
         db_local.commit()
         status = 'Rasputin is now full on milk.'
         code = 200
-        flash(status, 'success')
+        #flash(status, 'success')
     except db_local.DatabaseError:
         status = 'Error while updating database.'
         code = 403
-        flash(status, 'danger')
+        #flash(status, 'danger')
     finally:
         check = get_db().execute(
             "SELECT coffee_quantity, milk_quantity, syrup_quantity FROM machine_state WHERE id = ?",
@@ -159,7 +157,6 @@ def refill_syrup():
         return redirect(url_for('home'))
 
 @bp.route('/api/syrup')
-@login_required
 def refill_syrup_api():
     db_local = db.get_db()
     id = get_machine_id()
@@ -174,11 +171,11 @@ def refill_syrup_api():
         db_local.commit()
         status = 'Rasputin is now full on syrup.'
         code = 200
-        flash(status, 'success')
+        #flash(status, 'success')
     except db_local.DatabaseError:
         status = 'Error while updating database.'
         code = 403
-        flash(status, 'danger')
+        #flash(status, 'danger')
     finally:
         check = get_db().execute(
             "SELECT coffee_quantity, milk_quantity, syrup_quantity FROM machine_state WHERE id = ?",

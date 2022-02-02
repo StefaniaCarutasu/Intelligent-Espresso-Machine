@@ -1,0 +1,33 @@
+Restler Information: 0 : Starting task Test...
+    DateTime=2022-02-02T00:25:59.1571100Z
+Restler Information: 0 : Launching 'python.exe --version'
+    DateTime=2022-02-02T00:25:59.2768296Z
+Restler Information: 0 : Process execution terminated in 00:00:00.0451654 with exit code 0x0: 'python.exe --version'
+    DateTime=2022-02-02T00:25:59.3346860Z
+Restler Information: 0 : (11608) python.exe --version exited with code: 0
+    DateTime=2022-02-02T00:25:59.3444908Z
+Restler Information: 0 : Launching 'python.exe -B "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\../engine/restler.py" --restler_grammar "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\Compile\grammar.py" --custom_mutations "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\Compile\dict.json" --set_version 8.3.0    --no_ssl   --settings "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\Compile\engine_settings.json"     --include_user_agent --no_tokens_in_logs t --garbage_collection_interval 30 --fuzzing_mode directed-smoke-test'
+    DateTime=2022-02-02T00:25:59.3675516Z
+Restler Information: 0 : Process execution terminated in 00:00:04.0677710 with exit code 0x0: 'python.exe -B "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\../engine/restler.py" --restler_grammar "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\Compile\grammar.py" --custom_mutations "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\Compile\dict.json" --set_version 8.3.0    --no_ssl   --settings "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\Compile\engine_settings.json"     --include_user_agent --no_tokens_in_logs t --garbage_collection_interval 30 --fuzzing_mode directed-smoke-test'
+    DateTime=2022-02-02T00:26:03.4354521Z
+Restler Information: 0 : (16460) python.exe -B "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\../engine/restler.py" --restler_grammar "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\Compile\grammar.py" --custom_mutations "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\Compile\dict.json" --set_version 8.3.0    --no_ssl   --settings "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\Compile\engine_settings.json"     --include_user_agent --no_tokens_in_logs t --garbage_collection_interval 30 --fuzzing_mode directed-smoke-test exited with code: 0
+    DateTime=2022-02-02T00:26:03.4357522Z
+Restler Information: 0 : Launching 'dotnet "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\../resultsAnalyzer/Restler.ResultsAnalyzer.dll" analyze "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\Test" --output_dir "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\Test\ResponseBuckets" --dictionary_file "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\Compile\dict.json" --max_instances_per_bucket 10'
+    DateTime=2022-02-02T00:26:03.4494510Z
+Restler Information: 0 : Process execution terminated in 00:00:00.8555750 with exit code 0x0: 'dotnet "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\../resultsAnalyzer/Restler.ResultsAnalyzer.dll" analyze "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\Test" --output_dir "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\Test\ResponseBuckets" --dictionary_file "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\Compile\dict.json" --max_instances_per_bucket 10'
+    DateTime=2022-02-02T00:26:04.3051344Z
+Restler Information: 0 : (16696) dotnet "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\../resultsAnalyzer/Restler.ResultsAnalyzer.dll" analyze "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\Test" --output_dir "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\Test\ResponseBuckets" --dictionary_file "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\Compile\dict.json" --max_instances_per_bucket 10 exited with code: 0
+    DateTime=2022-02-02T00:26:04.3053783Z
+Restler Information: 0 : Request coverage (successful / total): 5 / 11
+    DateTime=2022-02-02T00:26:04.4874055Z
+Restler Information: 0 : Bugs were found!
+    DateTime=2022-02-02T00:26:04.4940234Z
+Restler Information: 0 : Bug buckets:
+    DateTime=2022-02-02T00:26:04.4944798Z
+Restler Information: 0 : 
+main_driver_500: 3
+    DateTime=2022-02-02T00:26:04.4989480Z
+Restler Information: 0 : Task Test succeeded.
+    DateTime=2022-02-02T00:26:04.5031032Z
+Restler Information: 0 : Collecting logs...
+    DateTime=2022-02-02T00:26:04.5083846Z

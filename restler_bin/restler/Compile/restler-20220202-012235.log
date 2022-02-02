@@ -1,0 +1,12 @@
+Restler Information: 0 : Starting task Compile...
+    DateTime=2022-02-01T23:22:36.0018356Z
+Restler Information: 0 : Launching 'dotnet "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\../compiler/Restler.CompilerExe.dll" "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\Compile\config.json"'
+    DateTime=2022-02-01T23:22:36.3286758Z
+Restler Information: 0 : Process execution terminated in 00:00:01.5447983 with exit code 0x0: 'dotnet "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\../compiler/Restler.CompilerExe.dll" "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\Compile\config.json"'
+    DateTime=2022-02-01T23:22:37.8827306Z
+Restler Information: 0 : (4028) dotnet "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\../compiler/Restler.CompilerExe.dll" "C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler\Compile\config.json" exited with code: 0
+    DateTime=2022-02-01T23:22:37.8904162Z
+Restler Information: 0 : Task Compile succeeded.
+    DateTime=2022-02-01T23:22:37.9071211Z
+Restler Information: 0 : Collecting logs...
+    DateTime=2022-02-01T23:22:37.9130951Z

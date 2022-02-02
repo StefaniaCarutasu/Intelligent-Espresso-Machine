@@ -24,7 +24,7 @@
     }
   ],
   "paths": {
-    "/auth/register": {
+    "/auth/api/register": {
       "post": {
         "summary": "Endpoint for registering new user",
         "operationId": "register",
@@ -53,7 +53,7 @@
         }
       }
     },
-    "/auth/login": {
+    "/auth/api/login": {
       "post": {
         "summary": "Endpoint for login existing user",
         "operationId": "login",
@@ -79,6 +79,17 @@
         "tags": [
           "functions"
         ],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserProfileRequestData"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Successfully updated the profile",
@@ -135,6 +146,38 @@
         }
       }
     },
+    "/profile/api/delete-programmed-coffee": {
+      "post": {
+        "summary": "Delete the programmed coffee",
+        "operationId": "delete_program_api",
+        "description": "Delete the programmed coffee",
+        "tags": [
+          "functions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted the programmed coffee",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteCoffeeResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Failed deleting the programmed coffee",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FailedDeleteCoffeeResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/profile/api/program": {
       "post": {
         "summary": "Program coffee making",
@@ -167,31 +210,31 @@
         }
       }
     },
-    "/profile/api/delete-programmed-coffee": {
-      "post": {
-        "summary": "Delete the programmed coffee",
-        "operationId": "delete_program_api",
-        "description": "Delete the programmed coffee",
+    "/profile/api/make_favorite_api": {
+      "get": {
+        "summary": "Make you favorite coffee",
+        "operationId": "make_favorite_api",
+        "description": "Make you favorite coffee",
         "tags": [
           "functions"
         ],
         "responses": {
           "200": {
-            "description": "Successfully deleted the programmed coffee",
+            "description": "Favorite coffee has been made",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DeleteCoffeeResponse"
+                  "$ref": "#/components/schemas/FavoriteResponse"
                 }
               }
             }
           },
           "403": {
-            "description": "Failed deleting the programmed coffee",
+            "description": "Error at making favorite coffee",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FailedDeleteCoffeeResponse"
+                  "$ref": "#/components/schemas/FailedFavoriteResponse"
                 }
               }
             }
@@ -371,7 +414,18 @@
           }
         }
       },
-      "HeadrestResponse": {
+      "UserProfileRequestData": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "birth_date": {
+            "type": "string"
+          }
+        }
+      },
+      "FavoriteResponse": {
         "type": "object",
         "properties": {
           "status": {
@@ -380,16 +434,24 @@
           "data": {
             "type": "object",
             "properties": {
-              "id": {
-                "type": "integer"
-              },
-              "timestamp": {
+              "name": {
                 "type": "string"
               },
-              "value": {
+              "roast_type": {
                 "type": "string"
+              },
+              "syrup": {
+                "type": "boolean"
               }
             }
+          }
+        }
+      },
+      "FailedFavoriteResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
           }
         }
       },
@@ -417,17 +479,6 @@
         "properties": {
           "status": {
             "type": "string"
-          },
-          "data": {
-            "type": "object",
-            "properties": {
-              "username": {
-                "type": "string"
-              },
-              "birth_date": {
-                "type": "string"
-              }
-            }
           }
         }
       },
