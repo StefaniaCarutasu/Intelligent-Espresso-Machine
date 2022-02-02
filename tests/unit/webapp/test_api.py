@@ -189,7 +189,7 @@ class RasputinApiTestCase(TestCase):
         self.login(username_login, username_login)
 
         res = self.client.get('/refill/api/coffee', follow_redirects=True)
-        json_res = json.loads(res.data.decode())
+        # json_res = json.loads(res.data.decode())
 
         assert res.status_code == 200
 
@@ -303,6 +303,8 @@ class RasputinApiTestCase(TestCase):
         self.edit_profile(username_login, dob)
 
     def test_home(self):
+        self.login(username_login, password_login)
+
         # post missing beverage type
         res = self.home('', roast_type, syrup)
         json_res = json.loads(res.data.decode())
@@ -324,24 +326,25 @@ class RasputinApiTestCase(TestCase):
         assert res.status_code == 200
         assert json_res['status'] == 'Rasputin is working on your coffee...'
 
-
     def test_start_coffee(self):
+        self.login(username_login, password_login)
+
         # post missing beverage type
-        res = self.home('', roast_type, syrup)
+        res = self.start_coffee('', roast_type, syrup)
         json_res = json.loads(res.data.decode())
 
         assert res.status_code == 403
         assert json_res['status'] == 'Beverage type is required.'
 
         # post missing roast type
-        res = self.home(beverage_type, '', syrup)
+        res = self.start_coffee(beverage_type, '', syrup)
         json_res = json.loads(res.data.decode())
 
         assert res.status_code == 403
         assert json_res['status'] == 'Roast type is required.'
 
         # post
-        res = self.home(1, roast_type, syrup)
+        res = self.start_coffee(1, roast_type, syrup)
         json_res = json.loads(res.data.decode())
 
         assert res.status_code == 200
