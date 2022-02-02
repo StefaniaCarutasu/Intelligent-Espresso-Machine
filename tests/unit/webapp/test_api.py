@@ -21,6 +21,11 @@ program_id = 1
 new_username = 'Stefi'
 dob = ''
 
+systolic = 150
+diastolic = 100
+
+temperature = 9
+
 
 class RasputinApiTestCase(TestCase):
     def create_app(self):
@@ -89,6 +94,14 @@ class RasputinApiTestCase(TestCase):
     def preprogram_coffee(self):
         return self.client.get('/api/preprogrammed_coffee')
 
+    def search_suggestions_bloodPressure(self, systolic, diastolic):
+        return self.client.post('/suggestion/api/bloodPressure', data=dict(
+            systolic=systolic,
+            diastolic=diastolic
+        ), follow_redirects=True)
+
+    def search_suggestions_temperature(self):
+        return self.client.get('/suggestion/api/temperature')
 
     def test_login(self):
         # post wrong username
@@ -209,7 +222,6 @@ class RasputinApiTestCase(TestCase):
         assert res.status_code == 200
         assert json_res['status'] == 'Rasputin is now full on milk.'
         assert json_res['data']['milk_quantity'] == 1000
-
 
     def test_refill_syrup(self):
         self.login(username_login, password_login)
@@ -348,3 +360,29 @@ class RasputinApiTestCase(TestCase):
 
         assert res.status_code == 200
         assert json_res['status'] == 'No preprogramned coffee to work on'
+
+    def test_search_suggestions_temperature(self):
+        res = self.search_suggestions_temperature()
+        json_res = json.loads(res.data.decode())
+
+        assert res.status_code == 200
+
+    def test_search_suggestions_bloodPressure(self):
+        # post missing systolic
+        res = self.search_suggestions_bloodPressure('', diastolic)
+        json_res = json.loads(res.data.decode())
+
+        assert res.status_code == 403
+        assert json_res['status'] == 'Introduce your blood pressure.'
+
+        # post missing diastolic
+        res = self.search_suggestions_bloodPressure(systolic, '')
+        json_res = json.loads(res.data.decode())
+
+        assert res.status_code == 403
+        assert json_res['status'] == 'Introduce your blood pressure.'
+
+        res = self.search_suggestions_bloodPressure(systolic, diastolic)
+        json_res = json.loads(res.data.decode())
+
+        assert res.status_code == 200
