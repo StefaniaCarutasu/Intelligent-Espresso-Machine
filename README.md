@@ -76,7 +76,7 @@ In other words, Rasputin combines the basic requirments of a coffee machine with
 
 
 <!-- GETTING STARTED -->
-## Getting Started
+## Method of Use
 
 You need to have python 3, pip 3 and mosquitto already installed on your machine.
 
