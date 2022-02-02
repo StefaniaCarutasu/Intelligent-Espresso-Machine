@@ -2,6 +2,9 @@ from flask import Blueprint, flash, g, redirect, render_template, request, url_f
 
 from rasputin.auth import login_required
 from . import db, forms
+import traceback
+
+import sys
 
 bp = Blueprint('profile', __name__, url_prefix='/profile')
 
@@ -64,11 +67,12 @@ def user_profile():
                            programmed_coffees=programmed_coffees, **context)
 
 
-@bp.route('/api/user-profile', methods=["GET","POST"])
+@bp.route('/api/user-profile', methods=['POST'])
+@login_required
 def user_profile_api():
     db_local = db.get_db()
     cursor = db_local.cursor()
-    error = None
+
     # preference
     cursor.execute(
         "SELECT b.name, p.roast_type, p.syrup FROM user_preference p INNER JOIN beverages_types b ON p.beverage_id = b.id WHERE user_id = ?",
@@ -81,13 +85,13 @@ def user_profile_api():
         (g.user[0],))
     programmed_coffees = cursor.fetchall()
 
+    error = None
 
     username = request.form['username']
     birth_date = request.form['birth_date']
 
     if not username:
-        error = 'You need to be logged in'
-        return jsonify({'status': error}), 403
+        error = 'Username required.'
 
     if error is None:
         try:
@@ -96,19 +100,29 @@ def user_profile_api():
                 (username, birth_date, g.user[0])
             )
             db_local.commit()
-            return jsonify({'status': 'Profile updated successfully!',
-                                   'data': {
-                                       'username': g.user[1],
-                                       'birth_date': g.user[5]
-                                   }}), 200
-        except db_local.DatabaseError:
-            return jsonify({'status': 'Error while updating the database'}), 403
 
-    return jsonify({'status': 'No modification',
-                   'data': {
-                        'username': g.user[1],
-                        'birth_date': g.user[5]
-                    }}), 200
+            g.user = db.get_db().execute(
+                'SELECT * FROM user WHERE id = ?', (g.user[0],)
+            ).fetchone()
+
+            return jsonify({
+                'status': 'User profile updated successfully',
+                'data': {
+                    'username': g.user[1],
+                    'birth_date': g.user[5]
+                }
+            }), 200
+        except db_local.DatabaseError:
+            error = 'Erorr while updating database.'
+
+    return jsonify({
+        'status': error,
+        'data': {
+            'username': g.user[1],
+            'birth_date': g.user[5]
+        }
+    }), 403
+
 
 # USER PREFERENCE
 @bp.route('/preference', methods=('GET', 'POST'))
@@ -150,10 +164,9 @@ def preference():
                     )
                     with current_app.app_context():
                         current_app.config['STATUS_API'] = 'Preference list updated successfully!'
+                    return redirect(url_for('profile.user_profile'))
                 except db_local.DatabaseError:
                     error = 'Error while deleting from database.'
-                    with current_app.app_context():
-                        current_app.config['STATUS_API'] = error
             
             else:
                 try:
@@ -167,10 +180,11 @@ def preference():
                     return redirect(url_for('profile.user_profile'))
                 except db_local.DatabaseError:
                     error = 'Error while inserting into database.'
-                    with current_app.app_context():
-                        current_app.config['STATUS_API'] = error
 
-    context['status'] = error
+    if error:
+        flash(error, 'danger')
+        context['status'] = error
+
     with current_app.app_context():
         current_app.config['STATUS_API'] = error
     return render_template('profile/preference-form.html', title='Preference form', form=form, **context)
@@ -184,14 +198,13 @@ def preference_api():
     cursor.execute("SELECT * FROM user_preference WHERE user_id = ?", (g.user[0],))
     preference = cursor.fetchone()
 
-    cursor.execute("SELECT * FROM beverages_types")
-    beverage_list = cursor.fetchall()
-
     error = None
 
     beverage_type = request.form['beverage_type']
     roast_type = request.form['roast_type']
     syrup = True if request.form.get('syrup') else False
+
+
 
     if not beverage_type:
         error = 'Beverage type is required.'
@@ -200,13 +213,13 @@ def preference_api():
 
     if error is None:
         if preference:
-            # deleting previous preference
+            # deleting previsious preferance
             try:
                 db_local.execute(
-                    "UPDATE user_preference SET beverage_id = ? roast_type = ? syrup = ? WHERE user_id = ?",
+                    "UPDATE user_preference SET beverage_id = ?, roast_type = ?, syrup = ? WHERE user_id = ?",
                     (beverage_type, roast_type, syrup, g.user[0])
                 )
-            except db_local.DatabaseError:
+            except db_local.DatabaseError as er:
                 error = 'Error while updating database.'
         else:
             try:
@@ -275,10 +288,11 @@ def program():
                 return redirect(url_for('profile.user_profile'))
             except db_local.DatabaseError:
                 error = 'Error while inserting into database.'
-                with current_app.app_context():
-                    current_app.config['STATUS_API'] = error
 
-    context['status'] = error
+    if error:
+        flash(error, 'danger')
+        context['status'] = error
+
     with current_app.app_context():
         current_app.config['STATUS_API'] = error
     return render_template('profile/programmed-coffee-form.html', title='Programmed coffee form', form=form, **context)
@@ -289,8 +303,6 @@ def program():
 def program_api():
     db_local = db.get_db()
     cursor = db_local.cursor()
-    cursor.execute("SELECT * FROM beverages_types")
-    beverage_list = cursor.fetchall()
 
     error = None
 

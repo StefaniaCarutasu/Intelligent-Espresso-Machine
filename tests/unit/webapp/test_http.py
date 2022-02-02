@@ -9,7 +9,7 @@ confirm_password = 'admin1234'
 username_login = 'user'
 password_login = 'user1234'
 
-beverage_type = 'Espresso'
+beverage_type = 1
 roast_type = 'Medium'
 syrup = ''
 time = '11:15 AM'
@@ -299,7 +299,7 @@ class RasputinTestCase(TestCase):
         assert self.get_context_variable('status') == 'Beverage type is required.'
 
         # post missing roast type
-        res = self.coffee_preference(beverage_type, '', syrup)
+        res = self.home(beverage_type, '', syrup)
 
         assert res.status_code == 200
         assert self.get_context_variable('status') == 'Roast type is required.'
