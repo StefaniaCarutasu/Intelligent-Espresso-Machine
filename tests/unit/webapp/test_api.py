@@ -1,3 +1,4 @@
+from matplotlib.style import use
 from rasputin.__init__ import create_app
 from flask_testing import TestCase
 import json
@@ -84,6 +85,10 @@ class RasputinApiTestCase(TestCase):
             roast_type=roast_type,
             syrup=syrup
         ), follow_redirects=True)
+
+    def preprogram_coffee(self):
+        return self.client.get('/api/preprogrammed_coffee')
+
 
     def test_login(self):
         # post wrong username
@@ -311,31 +316,6 @@ class RasputinApiTestCase(TestCase):
 
         self.edit_profile(username_login, dob)
 
-    def test_home(self):
-        self.login(username_login, password_login)
-        
-        # post missing beverage type
-        res = self.home('', roast_type, syrup)
-        json_res = json.loads(res.data.decode())
-
-        assert res.status_code == 403
-        assert json_res['status'] == 'Beverage type is required.'
-
-        # post missing roast type
-        res = self.home(beverage_type, '', syrup)
-        json_res = json.loads(res.data.decode())
-
-        assert res.status_code == 403
-        assert json_res['status'] == 'Roast type is required.'
-
-        # post
-        res = self.home(1, roast_type, syrup)
-        json_res = json.loads(res.data.decode())
-
-        assert res.status_code == 200
-        assert json_res['status'] == 'Rasputin is working on your coffee...'
-
-
     def test_start_coffee(self):
         self.login(username_login, password_login)
 
@@ -359,3 +339,12 @@ class RasputinApiTestCase(TestCase):
 
         assert res.status_code == 200
         assert json_res['status'] == 'Rasputin is working on your coffee...'
+
+    def test_preprogrammed_coffee(self):
+        self.login(username=username_login, password=password_login)
+
+        res = self.preprogram_coffee()
+        json_res = json.loads(res.data.decode())
+
+        assert res.status_code == 200
+        assert json_res['status'] == 'No preprogramned coffee to work on'

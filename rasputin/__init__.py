@@ -337,7 +337,7 @@ def create_app(test_config=None):
 
     # to test if machine starts working on the preprogrammed coffee
     # current time and current user are extracted automatically
-    @app.route('/api/preprogrammed_coffee', methods=['POST'])
+    @app.route('/api/preprogrammed_coffee')
     @auth.login_required
     def home_api_preprogrammed_coffee():
         # TEMPERTATURE API
