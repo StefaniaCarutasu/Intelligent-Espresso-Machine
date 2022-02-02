@@ -271,7 +271,8 @@ def create_app(test_config=None):
 
     # http: // localhost: 5000 / api / start_coffee?beverage_type = 1 & roast_type = high
     # to test if machine is able to start working on coffee based on user's preferences
-    @app.route('/api/start_coffee')
+    @app.route('/api/start_coffee', methods=['POST'])
+    @auth.login_required
     def home_api_start_coffee():
         # TEMPERTATURE API
         local_db = db.get_db()
@@ -297,13 +298,6 @@ def create_app(test_config=None):
             return jsonify({'status': error}), 403
 
         # MAKE COFFEE FORM
-        # getting all beverage types
-        cursor.execute("SELECT * FROM beverages_types")
-        beverage_list = cursor.fetchall()
-
-        # form = forms.CoffeeOptionsForm()
-        # form.beverage_type.choices = [(item['id'], item['name']) for item in beverage_list]
-
         beverage_type = request.args.get('beverage_type')
         roast_type = request.args.get('roast_type')
         syrup = True if request.args.get('syrup') else False
@@ -343,7 +337,8 @@ def create_app(test_config=None):
 
     # to test if machine starts working on the preprogrammed coffee
     # current time and current user are extracted automatically
-    @app.route('/api/preprogrammed_coffee')
+    @app.route('/api/preprogrammed_coffee', methods=['POST'])
+    @auth.login_required
     def home_api_preprogrammed_coffee():
         # TEMPERTATURE API
         local_db = db.get_db()
@@ -368,12 +363,6 @@ def create_app(test_config=None):
         if error:
             return jsonify({'status': error}), 403
 
-        # MAKE COFFEE FORM
-        # getting all beverage types
-        cursor.execute("SELECT * FROM beverages_types")
-        beverage_list = cursor.fetchall()
-
-        preference = False
         if g.user:
             # PROGRAMMED COFFEES
             current_time = datetime.now().strftime("%H:%M")
