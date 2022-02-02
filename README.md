@@ -162,7 +162,7 @@ CMD PROMP 3:
 
 ![image](https://user-images.githubusercontent.com/62221313/152016584-729ea77c-8e9e-44f1-90f2-2aa2bda047b4.png)
 
-![image](https://user-images.githubusercontent.com/62119841/152068259-c82035fc-e7fd-4254-9d0c-7415f9d98c2b.png)
+![image](https://user-images.githubusercontent.com/62119841/152075286-fb1d2d8d-2ab9-46e1-afa9-45dd7029c96c.png)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
