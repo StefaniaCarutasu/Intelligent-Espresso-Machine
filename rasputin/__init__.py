@@ -298,9 +298,9 @@ def create_app(test_config=None):
             return jsonify({'status': error}), 403
 
         # MAKE COFFEE FORM
-        beverage_type = request.args.get('beverage_type')
-        roast_type = request.args.get('roast_type')
-        syrup = True if request.args.get('syrup') else False
+        beverage_type = request.form['beverage_type']
+        roast_type = request.form['roast_type']
+        syrup = True if request.form['syrup'] else False
 
         if not beverage_type:
             error = 'Beverage type is required.'

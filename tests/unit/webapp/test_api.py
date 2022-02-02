@@ -220,7 +220,7 @@ class RasputinApiTestCase(TestCase):
         self.login(username_login, password_login)
 
         # post missing beverage type
-        res = self.program_coffee("", roast_type, syrup, time)
+        res = self.program_coffee('', roast_type, syrup, time)
         json_res = json.loads(res.data.decode())
 
         assert res.status_code == 403
@@ -338,7 +338,7 @@ class RasputinApiTestCase(TestCase):
 
     def test_start_coffee(self):
         self.login(username_login, password_login)
-        
+
         # post missing beverage type
         res = self.start_coffee('', roast_type, syrup)
         json_res = json.loads(res.data.decode())
