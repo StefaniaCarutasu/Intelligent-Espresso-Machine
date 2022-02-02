@@ -100,6 +100,11 @@ def user_profile_api():
                 (username, birth_date, g.user[0])
             )
             db_local.commit()
+
+            g.user = db.get_db().execute(
+                'SELECT * FROM user WHERE id = ?', (g.user[0],)
+            ).fetchone()
+
             return jsonify({
                 'status': 'User profile updated successfully',
                 'data': {

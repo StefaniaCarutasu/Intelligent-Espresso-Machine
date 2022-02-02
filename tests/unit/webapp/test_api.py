@@ -186,28 +186,35 @@ class RasputinApiTestCase(TestCase):
         assert json_res['status'] == 'Logged out successfully!'
 
     def test_refill_coffee(self):
-        self.login(username_login, username_login)
+        res = self.login(username_login, password_login)
 
         res = self.client.get('/refill/api/coffee', follow_redirects=True)
         json_res = json.loads(res.data.decode())
 
         assert res.status_code == 200
+        assert json_res['status'] == 'Rasputin is now full on coffee.'
+        assert json_res['data']['coffee_quantity'] == 1000
 
     def test_refill_milk(self):
-        self.login(username_login, username_login)
+        self.login(username_login, password_login)
 
         res = self.client.get('/refill/api/milk', follow_redirects=True)
-        # json_res = json.loads(res.data.decode())
+        json_res = json.loads(res.data.decode())
 
         assert res.status_code == 200
+        assert json_res['status'] == 'Rasputin is now full on milk.'
+        assert json_res['data']['milk_quantity'] == 1000
+
 
     def test_refill_syrup(self):
-        self.login(username_login, username_login)
+        self.login(username_login, password_login)
 
         res = self.client.get('/refill/api/syrup', follow_redirects=True)
-        # json_res = json.loads(res.data.decode())
+        json_res = json.loads(res.data.decode())
 
         assert res.status_code == 200
+        assert json_res['status'] == 'Rasputin is now full on syrup.'
+        assert json_res['data']['syrup_quantity'] == 100
 
     def test_program(self):
         self.login(username_login, password_login)
@@ -297,12 +304,16 @@ class RasputinApiTestCase(TestCase):
         res = self.edit_profile(new_username, dob)
         json_res = json.loads(res.data.decode())
 
-        assert json_res['status'] == 'User profile updated successfully'
         assert res.status_code == 200
+        assert json_res['status'] == 'User profile updated successfully'
+        assert json_res['data']['username'] == new_username
+        assert json_res['data']['birth_date'] == (None if not dob else dob)
 
         self.edit_profile(username_login, dob)
 
     def test_home(self):
+        self.login(username_login, password_login)
+        
         # post missing beverage type
         res = self.home('', roast_type, syrup)
         json_res = json.loads(res.data.decode())
@@ -326,22 +337,24 @@ class RasputinApiTestCase(TestCase):
 
 
     def test_start_coffee(self):
+        self.login(username_login, password_login)
+        
         # post missing beverage type
-        res = self.home('', roast_type, syrup)
+        res = self.start_coffee('', roast_type, syrup)
         json_res = json.loads(res.data.decode())
 
         assert res.status_code == 403
         assert json_res['status'] == 'Beverage type is required.'
 
         # post missing roast type
-        res = self.home(beverage_type, '', syrup)
+        res = self.start_coffee(beverage_type, '', syrup)
         json_res = json.loads(res.data.decode())
 
         assert res.status_code == 403
         assert json_res['status'] == 'Roast type is required.'
 
         # post
-        res = self.home(1, roast_type, syrup)
+        res = self.start_coffee(1, roast_type, syrup)
         json_res = json.loads(res.data.decode())
 
         assert res.status_code == 200
