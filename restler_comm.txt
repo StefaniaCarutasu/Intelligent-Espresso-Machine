@@ -1,0 +1,3 @@
+cd C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\restler_bin\restler
+restler.exe compile --api_spec C:\Facultate\Anul2\SO\Intelligent-Espresso-Machine\rasputin\openapi.json
+restler.exe test --grammar_file ./Compile/grammar.py --dictionary_file ./Compile/dict.json --settings ./Compile/engine_settings.json --no_ssl

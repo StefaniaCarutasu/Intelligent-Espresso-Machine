@@ -1,0 +1,866 @@
+{
+  "Requests": [
+    {
+      "id": {
+        "endpoint": "/auth/api/register",
+        "method": "Post"
+      },
+      "method": "Post",
+      "basePath": "/",
+      "path": [
+        {
+          "Constant": [
+            "String",
+            "auth"
+          ]
+        },
+        {
+          "Constant": [
+            "String",
+            "api"
+          ]
+        },
+        {
+          "Constant": [
+            "String",
+            "register"
+          ]
+        }
+      ],
+      "queryParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "bodyParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": [
+              {
+                "name": "__body__",
+                "payload": {
+                  "InternalNode": [
+                    {
+                      "name": "",
+                      "propertyType": "Object",
+                      "isRequired": true,
+                      "isReadOnly": false
+                    },
+                    [
+                      {
+                        "LeafNode": {
+                          "name": "username",
+                          "payload": {
+                            "Fuzzable": {
+                              "primitiveType": "String",
+                              "defaultValue": "fuzzstring"
+                            }
+                          },
+                          "isRequired": false,
+                          "isReadOnly": false
+                        }
+                      },
+                      {
+                        "LeafNode": {
+                          "name": "password",
+                          "payload": {
+                            "Fuzzable": {
+                              "primitiveType": "String",
+                              "defaultValue": "fuzzstring"
+                            }
+                          },
+                          "isRequired": false,
+                          "isReadOnly": false
+                        }
+                      }
+                    ]
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      ],
+      "headerParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ],
+        [
+          "DictionaryCustomPayload",
+          {
+            "ParameterList": [
+              {
+                "name": "Content-Type",
+                "payload": {
+                  "LeafNode": {
+                    "name": "",
+                    "payload": {
+                      "Constant": [
+                        "String",
+                        "application/json"
+                      ]
+                    },
+                    "isRequired": true,
+                    "isReadOnly": false
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      ],
+      "token": "Refreshable",
+      "headers": [
+        [
+          "Accept",
+          "application/json"
+        ],
+        [
+          "Host",
+          "127.0.0.1:5000"
+        ]
+      ],
+      "httpVersion": "1.1",
+      "requestMetadata": {
+        "isLongRunningOperation": false
+      }
+    },
+    {
+      "id": {
+        "endpoint": "/auth/api/login",
+        "method": "Post"
+      },
+      "method": "Post",
+      "basePath": "/",
+      "path": [
+        {
+          "Constant": [
+            "String",
+            "auth"
+          ]
+        },
+        {
+          "Constant": [
+            "String",
+            "api"
+          ]
+        },
+        {
+          "Constant": [
+            "String",
+            "login"
+          ]
+        }
+      ],
+      "queryParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "bodyParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "headerParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ],
+        [
+          "DictionaryCustomPayload",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "token": "Refreshable",
+      "headers": [
+        [
+          "Accept",
+          "application/json"
+        ],
+        [
+          "Host",
+          "127.0.0.1:5000"
+        ]
+      ],
+      "httpVersion": "1.1",
+      "requestMetadata": {
+        "isLongRunningOperation": false
+      }
+    },
+    {
+      "id": {
+        "endpoint": "/profile/api/user-profile",
+        "method": "Post"
+      },
+      "method": "Post",
+      "basePath": "/",
+      "path": [
+        {
+          "Constant": [
+            "String",
+            "profile"
+          ]
+        },
+        {
+          "Constant": [
+            "String",
+            "api"
+          ]
+        },
+        {
+          "Constant": [
+            "String",
+            "user-profile"
+          ]
+        }
+      ],
+      "queryParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "bodyParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "headerParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ],
+        [
+          "DictionaryCustomPayload",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "token": "Refreshable",
+      "headers": [
+        [
+          "Accept",
+          "application/json"
+        ],
+        [
+          "Host",
+          "127.0.0.1:5000"
+        ]
+      ],
+      "httpVersion": "1.1",
+      "requestMetadata": {
+        "isLongRunningOperation": false
+      }
+    },
+    {
+      "id": {
+        "endpoint": "/profile/api/preference",
+        "method": "Post"
+      },
+      "method": "Post",
+      "basePath": "/",
+      "path": [
+        {
+          "Constant": [
+            "String",
+            "profile"
+          ]
+        },
+        {
+          "Constant": [
+            "String",
+            "api"
+          ]
+        },
+        {
+          "Constant": [
+            "String",
+            "preference"
+          ]
+        }
+      ],
+      "queryParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "bodyParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "headerParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ],
+        [
+          "DictionaryCustomPayload",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "token": "Refreshable",
+      "headers": [
+        [
+          "Accept",
+          "application/json"
+        ],
+        [
+          "Host",
+          "127.0.0.1:5000"
+        ]
+      ],
+      "httpVersion": "1.1",
+      "requestMetadata": {
+        "isLongRunningOperation": false
+      }
+    },
+    {
+      "id": {
+        "endpoint": "/profile/api/program",
+        "method": "Post"
+      },
+      "method": "Post",
+      "basePath": "/",
+      "path": [
+        {
+          "Constant": [
+            "String",
+            "profile"
+          ]
+        },
+        {
+          "Constant": [
+            "String",
+            "api"
+          ]
+        },
+        {
+          "Constant": [
+            "String",
+            "program"
+          ]
+        }
+      ],
+      "queryParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "bodyParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "headerParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ],
+        [
+          "DictionaryCustomPayload",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "token": "Refreshable",
+      "headers": [
+        [
+          "Accept",
+          "application/json"
+        ],
+        [
+          "Host",
+          "127.0.0.1:5000"
+        ]
+      ],
+      "httpVersion": "1.1",
+      "requestMetadata": {
+        "isLongRunningOperation": false
+      }
+    },
+    {
+      "id": {
+        "endpoint": "/profile/api/delete-programmed-coffee",
+        "method": "Post"
+      },
+      "method": "Post",
+      "basePath": "/",
+      "path": [
+        {
+          "Constant": [
+            "String",
+            "profile"
+          ]
+        },
+        {
+          "Constant": [
+            "String",
+            "api"
+          ]
+        },
+        {
+          "Constant": [
+            "String",
+            "delete-programmed-coffee"
+          ]
+        }
+      ],
+      "queryParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "bodyParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "headerParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ],
+        [
+          "DictionaryCustomPayload",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "token": "Refreshable",
+      "headers": [
+        [
+          "Accept",
+          "application/json"
+        ],
+        [
+          "Host",
+          "127.0.0.1:5000"
+        ]
+      ],
+      "httpVersion": "1.1",
+      "requestMetadata": {
+        "isLongRunningOperation": false
+      }
+    },
+    {
+      "id": {
+        "endpoint": "/refill/api/coffee",
+        "method": "Get"
+      },
+      "method": "Get",
+      "basePath": "/",
+      "path": [
+        {
+          "Constant": [
+            "String",
+            "refill"
+          ]
+        },
+        {
+          "Constant": [
+            "String",
+            "api"
+          ]
+        },
+        {
+          "Constant": [
+            "String",
+            "coffee"
+          ]
+        }
+      ],
+      "queryParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "bodyParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "headerParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ],
+        [
+          "DictionaryCustomPayload",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "token": "Refreshable",
+      "headers": [
+        [
+          "Accept",
+          "application/json"
+        ],
+        [
+          "Host",
+          "127.0.0.1:5000"
+        ]
+      ],
+      "httpVersion": "1.1",
+      "requestMetadata": {
+        "isLongRunningOperation": false
+      }
+    },
+    {
+      "id": {
+        "endpoint": "/refill/api/milk",
+        "method": "Get"
+      },
+      "method": "Get",
+      "basePath": "/",
+      "path": [
+        {
+          "Constant": [
+            "String",
+            "refill"
+          ]
+        },
+        {
+          "Constant": [
+            "String",
+            "api"
+          ]
+        },
+        {
+          "Constant": [
+            "String",
+            "milk"
+          ]
+        }
+      ],
+      "queryParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "bodyParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "headerParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ],
+        [
+          "DictionaryCustomPayload",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "token": "Refreshable",
+      "headers": [
+        [
+          "Accept",
+          "application/json"
+        ],
+        [
+          "Host",
+          "127.0.0.1:5000"
+        ]
+      ],
+      "httpVersion": "1.1",
+      "requestMetadata": {
+        "isLongRunningOperation": false
+      }
+    },
+    {
+      "id": {
+        "endpoint": "/refill/api/syrup",
+        "method": "Get"
+      },
+      "method": "Get",
+      "basePath": "/",
+      "path": [
+        {
+          "Constant": [
+            "String",
+            "refill"
+          ]
+        },
+        {
+          "Constant": [
+            "String",
+            "api"
+          ]
+        },
+        {
+          "Constant": [
+            "String",
+            "syrup"
+          ]
+        }
+      ],
+      "queryParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "bodyParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "headerParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ],
+        [
+          "DictionaryCustomPayload",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "token": "Refreshable",
+      "headers": [
+        [
+          "Accept",
+          "application/json"
+        ],
+        [
+          "Host",
+          "127.0.0.1:5000"
+        ]
+      ],
+      "httpVersion": "1.1",
+      "requestMetadata": {
+        "isLongRunningOperation": false
+      }
+    },
+    {
+      "id": {
+        "endpoint": "/suggestion/api/temperature",
+        "method": "Get"
+      },
+      "method": "Get",
+      "basePath": "/",
+      "path": [
+        {
+          "Constant": [
+            "String",
+            "suggestion"
+          ]
+        },
+        {
+          "Constant": [
+            "String",
+            "api"
+          ]
+        },
+        {
+          "Constant": [
+            "String",
+            "temperature"
+          ]
+        }
+      ],
+      "queryParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "bodyParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "headerParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ],
+        [
+          "DictionaryCustomPayload",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "token": "Refreshable",
+      "headers": [
+        [
+          "Accept",
+          "application/json"
+        ],
+        [
+          "Host",
+          "127.0.0.1:5000"
+        ]
+      ],
+      "httpVersion": "1.1",
+      "requestMetadata": {
+        "isLongRunningOperation": false
+      }
+    },
+    {
+      "id": {
+        "endpoint": "/suggestion/api/bloodPressure",
+        "method": "Get"
+      },
+      "method": "Get",
+      "basePath": "/",
+      "path": [
+        {
+          "Constant": [
+            "String",
+            "suggestion"
+          ]
+        },
+        {
+          "Constant": [
+            "String",
+            "api"
+          ]
+        },
+        {
+          "Constant": [
+            "String",
+            "bloodPressure"
+          ]
+        }
+      ],
+      "queryParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "bodyParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "headerParameters": [
+        [
+          "Schema",
+          {
+            "ParameterList": []
+          }
+        ],
+        [
+          "DictionaryCustomPayload",
+          {
+            "ParameterList": []
+          }
+        ]
+      ],
+      "token": "Refreshable",
+      "headers": [
+        [
+          "Accept",
+          "application/json"
+        ],
+        [
+          "Host",
+          "127.0.0.1:5000"
+        ]
+      ],
+      "httpVersion": "1.1",
+      "requestMetadata": {
+        "isLongRunningOperation": false
+      }
+    }
+  ]
+}

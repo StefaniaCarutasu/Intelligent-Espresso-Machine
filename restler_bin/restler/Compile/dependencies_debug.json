@@ -1,0 +1,74 @@
+[
+  {
+    "consumer": {
+      "id": {
+        "RequestId": {
+          "endpoint": "/auth/api/register",
+          "method": "Post"
+        },
+        "ResourceReference": {
+          "BodyResource": {
+            "name": "password",
+            "fullPath": {
+              "path": [
+                "password"
+              ]
+            }
+          }
+        },
+        "ContainerName": "register",
+        "PathContainerName": "register",
+        "CandidateTypeNames": [
+          "register"
+        ],
+        "AccessPath": "password",
+        "AccessPathParts": {
+          "path": [
+            "password"
+          ]
+        },
+        "ResourceName": "password",
+        "ProducerParameterName": "password",
+        "IsNestedBodyResource": false,
+        "PrimitiveType": "String"
+      },
+      "parameterKind": "Body"
+    }
+  },
+  {
+    "consumer": {
+      "id": {
+        "RequestId": {
+          "endpoint": "/auth/api/register",
+          "method": "Post"
+        },
+        "ResourceReference": {
+          "BodyResource": {
+            "name": "username",
+            "fullPath": {
+              "path": [
+                "username"
+              ]
+            }
+          }
+        },
+        "ContainerName": "register",
+        "PathContainerName": "register",
+        "CandidateTypeNames": [
+          "register"
+        ],
+        "AccessPath": "username",
+        "AccessPathParts": {
+          "path": [
+            "username"
+          ]
+        },
+        "ResourceName": "username",
+        "ProducerParameterName": "username",
+        "IsNestedBodyResource": false,
+        "PrimitiveType": "String"
+      },
+      "parameterKind": "Body"
+    }
+  }
+]

@@ -64,12 +64,11 @@ def user_profile():
                            programmed_coffees=programmed_coffees, **context)
 
 
-@bp.route('/api/user-profile', methods=['POST'])
-@login_required
+@bp.route('/api/user-profile', methods=["GET","POST"])
 def user_profile_api():
     db_local = db.get_db()
     cursor = db_local.cursor()
-
+    error = None
     # preference
     cursor.execute(
         "SELECT b.name, p.roast_type, p.syrup FROM user_preference p INNER JOIN beverages_types b ON p.beverage_id = b.id WHERE user_id = ?",
@@ -82,13 +81,13 @@ def user_profile_api():
         (g.user[0],))
     programmed_coffees = cursor.fetchall()
 
-    error = None
 
     username = request.form['username']
     birth_date = request.form['birth_date']
 
     if not username:
-        error = 'Username required.'
+        error = 'You need to be logged in'
+        return jsonify({'status': error}), 403
 
     if error is None:
         try:
@@ -97,24 +96,19 @@ def user_profile_api():
                 (username, birth_date, g.user[0])
             )
             db_local.commit()
-            return jsonify({
-                'status': 'User profile updated successfully',
-                'data': {
-                    'username': g.user[1],
-                    'birth_date': g.user[5]
-                }
-            }), 200
+            return jsonify({'status': 'Profile updated successfully!',
+                                   'data': {
+                                       'username': g.user[1],
+                                       'birth_date': g.user[5]
+                                   }}), 200
         except db_local.DatabaseError:
-            error = 'Erorr while updating database.'
+            return jsonify({'status': 'Error while updating the database'}), 403
 
-    return jsonify({
-        'status': error,
-        'data': {
-            'username': g.user[1],
-            'birth_date': g.user[5]
-        }
-    }), 403
-
+    return jsonify({'status': 'No modification',
+                   'data': {
+                        'username': g.user[1],
+                        'birth_date': g.user[5]
+                    }}), 200
 
 # USER PREFERENCE
 @bp.route('/preference', methods=('GET', 'POST'))
@@ -206,7 +200,7 @@ def preference_api():
 
     if error is None:
         if preference:
-            # deleting previsious preferance
+            # deleting previous preference
             try:
                 db_local.execute(
                     "UPDATE user_preference SET beverage_id = ? roast_type = ? syrup = ? WHERE user_id = ?",

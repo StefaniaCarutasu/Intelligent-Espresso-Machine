@@ -1,0 +1,23 @@
+{
+  "SwaggerSpecFilePath": [
+    "C:\\Facultate\\Anul2\\SO\\Intelligent-Espresso-Machine\\rasputin\\openapi.json"
+  ],
+  "GrammarOutputDirectoryPath": "C:\\Facultate\\Anul2\\SO\\Intelligent-Espresso-Machine\\restler_bin\\restler\\Compile",
+  "CustomDictionaryFilePath": "C:\\Facultate\\Anul2\\SO\\Intelligent-Espresso-Machine\\restler_bin\\restler\\Compile\\defaultDict.json",
+  "IncludeOptionalParameters": true,
+  "UseHeaderExamples": true,
+  "UsePathExamples": false,
+  "UseQueryExamples": true,
+  "UseBodyExamples": true,
+  "UseAllExamplePayloads": false,
+  "DiscoverExamples": false,
+  "ExamplesDirectory": "",
+  "DataFuzzing": true,
+  "ReadOnlyFuzz": false,
+  "ResolveQueryDependencies": true,
+  "ResolveBodyDependencies": true,
+  "ResolveHeaderDependencies": false,
+  "UseRefreshableToken": true,
+  "AllowGetProducers": false,
+  "TrackFuzzedParameterNames": false
+}
